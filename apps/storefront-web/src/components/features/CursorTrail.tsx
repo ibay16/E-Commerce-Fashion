@@ -5,7 +5,7 @@ import { useCallback, useRef, useState } from "react";
 import { HERO_CLOTHING } from "../data/products";
 import Image from "next/image";
 
-import { getImageUrl } from "@/frontend/lib/image-utils";
+import { getImageUrl } from "@/lib/image-utils";
 
 interface TrailItem {
   id: number;
@@ -114,3 +114,4 @@ export default function CursorTrail({ containerRef }: CursorTrailProps) {
     </>
   );
 }
+

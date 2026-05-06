@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useColorTheme } from "@/context/ColorContext";
 import AnimatedWave from "../features/AnimatedWave";
 import ClothingCarousel from "../features/ClothingCarousel";
-import { getTees, getJeans } from "@/frontend/lib/actions/catalogue";
+import { getTees, getJeans } from "@/lib/actions/catalogue";
 
 export default function EssentializedSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -192,3 +192,4 @@ export default function EssentializedSection() {
     </section>
   );
 }
+

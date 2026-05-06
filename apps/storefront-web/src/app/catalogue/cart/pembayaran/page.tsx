@@ -22,7 +22,7 @@ interface CourierOption {
 import dynamic from "next/dynamic";
 import { fetchProvinces } from "@/lib/api/geography";
 
-const LocationMap = dynamic(() => import("@/frontend/components/checkout/LocationMap"), { ssr: false });
+const LocationMap = dynamic(() => import("@/components/checkout/LocationMap"), { ssr: false });
 
 const STANDARD_PAYMENTS = [
   { id: "std_qris", label: "QRIS", details: "Dana, OVO, LinkAja, dsb." },

@@ -4,8 +4,8 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { getProducts } from "@/frontend/lib/actions/catalogue";
-import type { CatalogueProduct } from "@/frontend/components/catalogue/types";
+import { getProducts } from "@/lib/actions/catalogue";
+import type { CatalogueProduct } from "@/components/catalogue/types";
 
 import FilterBar from "../ui/FilterBar";
 import ProductCard from "../ui/ProductCard";
@@ -177,3 +177,4 @@ export default function DiscoverSection() {
     </section>
   );
 }
+

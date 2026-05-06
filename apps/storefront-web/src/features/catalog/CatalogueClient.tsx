@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import type { CatalogueProduct } from "./types";
-import type { CategoryFilter } from "@/frontend/lib/actions/catalogue";
+import type { CategoryFilter } from "@/lib/actions/catalogue";
 import CatalogueFilterSidebar from "./CatalogueFilterSidebar";
 import CatalogueGrid from "./CatalogueGrid";
 import ProductDetailModal from "./ProductDetailModal";
@@ -69,3 +69,4 @@ export default function CatalogueClient({ initialProducts }: Props) {
     </div>
   );
 }
+

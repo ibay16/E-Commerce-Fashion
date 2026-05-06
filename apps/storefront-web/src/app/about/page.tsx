@@ -1,13 +1,13 @@
 "use client";
 
 import { useScroll } from "framer-motion";
-import GlowOrb from "@/frontend/components/ui/GlowOrb";
-import AboutHero from "@/frontend/components/sections/about/AboutHero";
-import AboutStory from "@/frontend/components/sections/about/AboutStory";
-import AboutTeam from "@/frontend/components/sections/about/AboutTeam";
-import AboutValues from "@/frontend/components/sections/about/AboutValues";
-import AboutCTA from "@/frontend/components/sections/about/AboutCTA";
-import Footer from "@/frontend/components/layout/Footer";
+import GlowOrb from "@/components/ui/GlowOrb";
+import AboutHero from "@/components/sections/about/AboutHero";
+import AboutStory from "@/components/sections/about/AboutStory";
+import AboutTeam from "@/components/sections/about/AboutTeam";
+import AboutValues from "@/components/sections/about/AboutValues";
+import AboutCTA from "@/components/sections/about/AboutCTA";
+import Footer from "@/components/layout/Footer";
 
 export default function AboutPage() {
   const { scrollYProgress } = useScroll();

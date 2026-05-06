@@ -7,7 +7,7 @@
 "use server";
 
 import type { CatalogueProduct } from "@/components/catalogue/types";
-import { getImageUrl } from "@/frontend/lib/image-utils";
+import { getImageUrl } from "@/lib/image-utils";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -138,3 +138,4 @@ export async function getCarouselImages(): Promise<string[]> {
     return [];
   }
 }
+

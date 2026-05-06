@@ -11,7 +11,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CatalogueHero from "@/components/catalogue/CatalogueHero";
 import CatalogueClient from "@/components/catalogue/CatalogueClient";
-import { getProducts } from "@/frontend/lib/actions/catalogue";
+import { getProducts } from "@/lib/actions/catalogue";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -37,3 +37,4 @@ export default async function CataloguePage() {
     </ColorProvider>
   );
 }
+

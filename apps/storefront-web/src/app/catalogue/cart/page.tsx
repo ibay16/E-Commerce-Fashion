@@ -22,7 +22,7 @@ function getActualPrice(price: any): number {
   return p < 10000 ? p * 1000 : p;
 }
 
-import { getImageUrl } from "@/frontend/lib/image-utils";
+import { getImageUrl } from "@/lib/image-utils";
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart } = useCart();

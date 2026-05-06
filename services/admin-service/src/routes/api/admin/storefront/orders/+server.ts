@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { json } from '@sveltejs/kit';
 import { OrderController } from '../../../../../../modules/order/order.controller';
 import type { OrderStatus } from '@novure/database';
@@ -12,3 +13,6 @@ export async function GET({ url }) {
     return json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }
+=======
+export { GET } from './storefront-orders.handler';
+>>>>>>> efc48565b7c3a48615547675fc5df169f45f5321

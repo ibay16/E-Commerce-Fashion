@@ -5,7 +5,7 @@ import type { MotionValue } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getImageUrl } from "@/frontend/lib/image-utils";
+import { getImageUrl } from "@/lib/image-utils";
 type ClothingItem = { id: string; name: string; price: number; image: string; description: string };
 
 interface ClothingCarouselProps {
@@ -152,3 +152,4 @@ export default function ClothingCarousel({
     </motion.div>
   );
 }
+

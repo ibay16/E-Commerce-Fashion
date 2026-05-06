@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import RegisterPage from "../../frontend/components/auth/register/RegisterPage";
+import RegisterPage from "../../features/auth/register/RegisterPage";
 import "../login/auth.css";
 
 export const metadata: Metadata = {

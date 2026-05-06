@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { useState } from "react";
-import { getImageUrl } from "@/frontend/lib/image-utils";
+import { getImageUrl } from "@/lib/image-utils";
 type DiscoverProduct = any;
 
 interface ProductCardProps {
@@ -78,3 +78,4 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     </motion.div>
   );
 }
+

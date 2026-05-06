@@ -4,7 +4,7 @@
  */
 
 import type { Metadata } from "next";
-import LoginPage from "../../frontend/components/auth/login/LoginPage";
+import LoginPage from "../../features/auth/login/LoginPage";
 
 export const metadata: Metadata = {
   title: "Masuk | Novure",

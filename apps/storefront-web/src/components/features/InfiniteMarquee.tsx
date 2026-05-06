@@ -2,10 +2,10 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { getCarouselImages } from "@/frontend/lib/actions/catalogue";
+import { getCarouselImages } from "@/lib/actions/catalogue";
 import Image from "next/image";
 
-import { getImageUrl } from "@/frontend/lib/image-utils";
+import { getImageUrl } from "@/lib/image-utils";
 
 interface InfiniteMarqueeProps {
   /** Animation duration in seconds */
@@ -62,3 +62,4 @@ export default function InfiniteMarquee({ speed = 25, itemHeight = 380 }: Infini
     </div>
   );
 }
+
