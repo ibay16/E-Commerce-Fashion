@@ -3,6 +3,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import orderRoutes from './routes/order.routes';
 import shippingRoutes from './routes/shipping.routes';
+import { errorHandler } from './middleware/error-handler';
 
 const app = express();
 
@@ -15,9 +16,11 @@ app.get('/health', (req, res) => {
 });
 
 // Modular Routes
-// Prefixes based on API Gateway mapping
 app.use('/api/admin/management/auth', authRoutes);
 app.use('/api/admin/management/orders', orderRoutes);
 app.use('/api/admin/management/shipping', shippingRoutes);
+
+// Error Handler
+app.use(errorHandler);
 
 export default app;

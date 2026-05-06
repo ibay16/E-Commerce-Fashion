@@ -6,6 +6,7 @@ import reviewRoutes from "./routes/review.routes";
 import shippingRoutes from "./routes/shipping.routes";
 import analyticsRoutes from "./routes/analytics.routes";
 import healthRoutes from "./routes/health.routes";
+import { errorHandler } from "./middleware/error-handler";
 
 const app = express();
 
@@ -28,5 +29,8 @@ app.use("/api/admin/categories", categoryRoutes);
 app.use("/api/admin/analytics", analyticsRoutes);
 
 app.use("/api/health", healthRoutes);
+
+// Error Handler
+app.use(errorHandler);
 
 export default app;

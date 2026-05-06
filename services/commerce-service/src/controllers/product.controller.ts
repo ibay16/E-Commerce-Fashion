@@ -1,115 +1,28 @@
-import prisma from "../db/client";
-import type { Prisma } from "@prisma/client";
+import { Request, Response, NextFunction } from 'express';
+import { ProductService } from '../services/product.service';
 
 export class ProductController {
-  static async getProducts(params: { categoryId?: string | null, categoryName?: string | null, query?: string | null, idsParam?: string | null }) {
-    const { categoryId, categoryName, query, idsParam } = params;
-
-    let resolvedCategoryId = categoryId;
-
-    if (categoryName && categoryName !== "all" && !resolvedCategoryId) {
-      const mappedName = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
-      const category = await prisma.category.findFirst({
-        where: {
-          name: {
-            mode: 'insensitive',
-            equals: mappedName
-          }
-        },
-        select: { id: true }
+  static async getProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { categoryId, categoryName, q, ids } = req.query;
+      const data = await ProductService.getProducts({
+        categoryId: categoryId as string,
+        categoryName: categoryName as string,
+        query: q as string,
+        idsParam: ids as string
       });
-
-      if (category) {
-        resolvedCategoryId = category.id;
-      } else {
-        return { data: [] };
-      }
+      res.json({ success: true, data });
+    } catch (err) {
+      next(err);
     }
-
-    const where: Prisma.ProductWhereInput = {};
-
-    if (!idsParam) {
-      where.stock = { gt: 0 };
-    }
-
-    if (idsParam) {
-      const ids = idsParam.split(',').map(id => id.trim()).filter(Boolean);
-      if (ids.length > 0) {
-        where.id = { in: ids };
-      }
-    }
-
-    if (resolvedCategoryId) {
-      where.categoryId = resolvedCategoryId;
-    }
-
-    if (query) {
-      where.OR = [
-        { name: { contains: query, mode: 'insensitive' } },
-        { description: { contains: query, mode: 'insensitive' } }
-      ];
-    }
-
-    const products = await prisma.product.findMany({
-      where,
-      include: {
-        category: {
-          select: { name: true }
-        },
-        variants: true
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
-
-    return { data: products };
   }
 
-  static async getAdminProducts(params: { q?: string | null, categoryId?: string | null }) {
-    const { q, categoryId } = params;
-    const products = await prisma.product.findMany({
-      where: {
-        categoryId: categoryId || undefined,
-        OR: q ? [
-          { name: { contains: q, mode: "insensitive" } },
-          { description: { contains: q, mode: "insensitive" } }
-        ] : undefined
-      },
-      include: { category: true },
-      orderBy: { createdAt: "desc" }
-    });
-    return { data: products };
-  }
-
-  static async getProductByIdAdmin(id: string) {
-    const product = await prisma.product.findUnique({
-      where: { id },
-      include: { category: true, variants: true }
-    });
-    return { data: product };
-  }
-
-  static async updateProduct(id: string, data: any) {
-    const updateData: any = { ...data };
-    if (data.images) {
-      updateData.image = data.images;
-      delete updateData.images;
+  static async getProductById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await ProductService.getProductById(req.params.id);
+      res.json({ success: true, data });
+    } catch (err) {
+      next(err);
     }
-    
-    if (data.name && !data.slug) {
-      updateData.slug = data.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-    }
-
-    const updated = await prisma.product.update({
-      where: { id },
-      data: updateData
-    });
-    return { data: updated };
-  }
-
-  static async deleteProduct(id: string) {
-    await prisma.product.delete({ where: { id } });
-    return { success: true };
   }
 }

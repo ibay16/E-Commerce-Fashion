@@ -7,6 +7,7 @@ import cartRoutes from './routes/cart';
 import checkoutRoutes from './routes/checkout';
 import orderRoutes from './routes/orders';
 import shippingRoutes from './routes/shipping';
+import { errorHandler } from './middleware/error-handler';
 
 const app = express();
 
@@ -26,5 +27,8 @@ app.use('/cart', cartRoutes);
 app.use('/checkout', checkoutRoutes);
 app.use('/orders', orderRoutes);
 app.use('/shipping', shippingRoutes);
+
+// Error Handler
+app.use(errorHandler);
 
 export default app;

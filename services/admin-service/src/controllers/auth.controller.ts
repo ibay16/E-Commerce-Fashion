@@ -1,5 +1,5 @@
 import { prisma } from '../db/client';
-import { verifyPassword } from '@application/auth/password';
+import { verifyPassword } from '../utils/password';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'novure-super-secret-key-2026';

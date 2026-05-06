@@ -1,42 +1,33 @@
-import bcrypt from 'bcryptjs';
-import { prisma } from '../db/client';
-import { generateToken } from '../middleware/auth';
+import { Request, Response, NextFunction } from 'express';
+import { AuthService } from '../services/auth.service';
+import { AuthRequest } from '../middleware/auth';
 
 export class AuthController {
-  static async login(params: { email: string, password: any }) {
-    const { email, password } = params;
-    const customer = await prisma.customer.findUnique({ where: { email } });
-    
-    if (!customer || !bcrypt.compareSync(password, customer.password)) {
-      throw new Error('Invalid credentials');
+  static async login(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email, password } = req.body;
+      const result = await AuthService.login(email, password);
+      res.json({ success: true, ...result });
+    } catch (err) {
+      next(err);
     }
-    
-    const token = generateToken(customer.id, 'CUSTOMER');
-    const { password: _, ...customerData } = customer;
-    return { data: customerData, token };
   }
 
-  static async register(params: { email: string, password: any, name: string, phone: string }) {
-    const { email, password, name, phone } = params;
-    const existing = await prisma.customer.findUnique({ where: { email } });
-    
-    if (existing) throw new Error('Email exists');
-    
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    const customer = await prisma.customer.create({
-      data: { email, password: hashedPassword, name, phone }
-    });
-    
-    const token = generateToken(customer.id, 'CUSTOMER');
-    const { password: _, ...customerData } = customer;
-    return { data: customerData, token };
+  static async register(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await AuthService.register(req.body);
+      res.status(201).json({ success: true, ...result });
+    } catch (err) {
+      next(err);
+    }
   }
 
-  static async getMe(userId: string) {
-    const customer = await prisma.customer.findUnique({ where: { id: userId } });
-    if (!customer) throw new Error('Not found');
-    
-    const { password: _, ...customerData } = customer;
-    return { data: customerData };
+  static async getMe(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const result = await AuthService.getMe(req.user!.id);
+      res.json({ success: true, ...result });
+    } catch (err) {
+      next(err);
+    }
   }
 }
