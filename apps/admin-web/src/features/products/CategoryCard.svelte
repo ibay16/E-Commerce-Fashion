@@ -1,21 +1,8 @@
 <script lang="ts">
   import { env } from '$env/dynamic/public';
+  import { getImageUrl } from '@lib/utils/image';
   
   let { category } = $props<{ category: any }>();
-  
-  function getImageUrl(url: string | null) {
-    if (!url) return '';
-    if (url.startsWith('http')) return url;
-    
-    const SUPABASE_URL = env.PUBLIC_SUPABASE_URL;
-    const BUCKET_NAME = 'products';
-    
-    let cleanPath = url.startsWith('/') ? url.slice(1) : url;
-    if (cleanPath.startsWith('images/')) {
-      cleanPath = cleanPath.replace('images/', '');
-    }
-    return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${cleanPath}`;
-  }
 
   const displayImage = $derived(category.image || (category.products?.[0]?.images?.[0] || null));
 </script>

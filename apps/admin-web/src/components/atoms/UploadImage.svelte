@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { uploadImage } from '@lib/api/uploads';
+  import { uploadImage, toBase64, generateFilePath } from '@lib/api/uploads';
+  import { getImageUrl } from '@lib/utils/image';
   
   let { 
     bucket = 'products', 
@@ -17,14 +18,16 @@
 
   let uploading = $state(false);
   let errorMsg = $state('');
-  let previewUrl = $state(initialImage);
+  
+  // Local preview URL (blob) if a file is chosen, otherwise null
+  let previewUrl = $state<string | null>(null);
+  
+  // Derived display URL: uses local preview if available, otherwise formed from props
+  let displayUrl = $derived(previewUrl || getImageUrl(initialImage, bucket));
+  
   let fileInput: HTMLInputElement;
 
-  $effect(() => {
-    previewUrl = initialImage;
-  });
-
-  // Cleanup object URL to prevent memory leaks
+  // Cleanup object URLs to prevent memory leaks
   $effect(() => {
     return () => {
       if (previewUrl && previewUrl.startsWith('blob:')) {
@@ -42,18 +45,15 @@
       uploading = true;
       errorMsg = '';
       
-      // Cleanup previous blob if exists
-      if (previewUrl.startsWith('blob:')) {
+      // Set local preview
+      if (previewUrl && previewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl);
       }
-      
-      previewUrl = URL.createObjectURL(file); // Local preview
+      previewUrl = URL.createObjectURL(file); 
 
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${crypto.randomUUID()}.${fileExt}`;
-      const filePath = `${folder}/${fileName}`;
-
+      const filePath = generateFilePath(folder, file.name);
       const base64 = await toBase64(file);
+      
       const result = await uploadImage({
         bucket,
         path: filePath,
@@ -65,35 +65,24 @@
         throw new Error(result.error || 'Upload failed');
       }
 
+      // We propagate the publicUrl as per current data model, 
+      // but the component shows it via currentImageUrl (blob or proxied)
       onUpload(result.publicUrl);
     } catch (error: any) {
       console.error('Error uploading image:', error);
-      errorMsg = 'Upload failed. Please check your connection and storage settings.';
+      errorMsg = 'Upload failed. Please check your connection.';
     } finally {
       uploading = false;
     }
-  }
-
-  function toBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = typeof reader.result === 'string' ? reader.result : '';
-        const base64 = result.includes('base64,') ? result.split('base64,')[1] : result;
-        resolve(base64);
-      };
-      reader.onerror = () => reject(reader.error);
-      reader.readAsDataURL(file);
-    });
   }
 </script>
 
 <div class="upload-editorial">
   <span class="input-label">{label}</span>
   
-  <div class="preview-container" class:has-image={!!previewUrl}>
-    {#if previewUrl}
-      <img src={previewUrl} alt="Preview" />
+  <div class="preview-container" class:has-image={!!displayUrl}>
+    {#if displayUrl}
+      <img src={displayUrl} alt="Preview" />
     {:else}
       <div class="upload-placeholder">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
@@ -124,85 +113,3 @@
   />
 </div>
 
-<style>
-  .upload-editorial {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .input-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #aaa;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-    display: block;
-  }
-
-  .preview-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #fafafa;
-    border-radius: 1.2rem;
-    border: 1.5px dashed #eee;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-  }
-
-  .preview-container.has-image {
-    border-style: solid;
-    border-color: #f0f0f0;
-  }
-
-  .preview-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .upload-placeholder {
-    text-align: center;
-    color: #ccc;
-  }
-
-  .upload-placeholder p {
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-top: 0.5rem;
-  }
-
-  .trigger-btn {
-    position: absolute;
-    background: #fff;
-    border: 1px solid #eee;
-    padding: 0.5rem 1.2rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    transition: all 0.2s ease;
-  }
-
-  .trigger-btn:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-  }
-
-  .trigger-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-
-  .error-text {
-    font-size: 0.7rem;
-    color: #b91c1c;
-    font-weight: 600;
-    margin-top: 0.5rem;
-  }
-</style>

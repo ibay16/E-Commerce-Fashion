@@ -19,7 +19,8 @@ export class ProductController {
 
   static async getProductById(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductService.getProductById(req.params.id);
+      const { id } = req.params;
+      const data = await ProductService.getProductById(id as string);
       res.json({ success: true, data });
     } catch (err) {
       next(err);
@@ -41,7 +42,8 @@ export class ProductController {
 
   static async getAdminProductById(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductService.getAdminProductById(req.params.id);
+      const { id } = req.params;
+      const data = await ProductService.getAdminProductById(id as string);
       res.json({ success: true, data });
     } catch (err) {
       next(err);
@@ -59,7 +61,8 @@ export class ProductController {
 
   static async updateProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductService.updateProduct(req.params.id, req.body);
+      const { id } = req.params;
+      const data = await ProductService.updateProduct(id as string, req.body);
       res.json({ success: true, data });
     } catch (err) {
       next(err);
@@ -68,7 +71,8 @@ export class ProductController {
 
   static async deleteProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await ProductService.deleteProduct(req.params.id);
+      const { id } = req.params;
+      const data = await ProductService.deleteProduct(id as string);
       res.json({ success: true, data });
     } catch (err) {
       next(err);

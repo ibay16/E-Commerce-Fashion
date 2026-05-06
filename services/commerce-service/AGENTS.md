@@ -9,7 +9,7 @@ Layanan ini menggunakan pola desain berlapis untuk pemisahan tanggung jawab yang
 - **Routes (`src/routes/`)**: Hanya bertanggung jawab untuk definisi endpoint Express dan pemetaan middleware (seperti validasi Joi). Dilarang memasukkan logika bisnis di sini.
 - **Controllers (`src/controllers/`)**: Bertindak sebagai orkestrator tipis. Mengambil data dari `req` (params, query, body), memanggil layer Service, dan mengembalikan respon dalam amplop `ApiResponse` standar.
 - **Services (`src/services/`)**: **Pusat Logika Bisnis**. Seluruh perhitungan, manipulasi data, dan aturan validasi tingkat tinggi wajib diletakkan di sini agar dapat diuji secara mandiri (*Unit Testable*).
-- **Database Client (`src/db/client.ts`)**: Satu-satunya titik akses untuk instance Prisma yang diimpor dari `@novure/database`.
+- **Database Client (`src/db/client.ts`)**: Satu-satunya titik akses untuk instance Prisma yang diimpor dari `@prisma/client` (Client Lokal).
 
 ### Standar Pengembangan API
 - **Zero UI Logic**: Dilarang keras memasukkan logika rendering atau elemen frontend. Balasan harus selalu berupa JSON murni.

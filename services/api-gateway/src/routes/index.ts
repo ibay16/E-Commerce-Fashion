@@ -14,12 +14,16 @@ import adminUsersRoutes from './admin/users.routes';
 import adminManagementRoutes from './admin/management.routes';
 
 import { geographyProxy } from '../proxies/geography.proxy';
+import { supabaseProxy } from '../proxies/supabase.proxy';
 import { customerProxy } from '../proxies/admin.proxy';
 
 const router = express.Router();
 
 // 1. Geography API
 router.use('/geography', geographyProxy);
+
+// 2. Supabase Assets Proxy
+router.use('/assets/supabase', supabaseProxy);
 
 // 2. Storefront BFF
 router.use('/storefront/auth', storefrontAuthRoutes);

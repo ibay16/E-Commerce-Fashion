@@ -8,6 +8,7 @@ export const env = {
   COMMERCE_SERVICE_URL: process.env.STOREFRONT_BACKEND_URL || 'http://commerce-service:3001',
   ADMIN_SERVICE_URL: process.env.ADMIN_BACKEND_URL || 'http://admin-service:4001',
   CUSTOMER_SERVICE_URL: process.env.CUSTOMER_BACKEND_URL || 'http://customer-service:4002',
+  SUPABASE_URL: process.env.PUBLIC_SUPABASE_URL || 'https://ghdadhlyhzdkrjlurifj.supabase.co',
   ALLOWED_ORIGINS: [
     process.env.STOREFRONT_PROD_URL,
     process.env.ADMIN_PROD_URL,

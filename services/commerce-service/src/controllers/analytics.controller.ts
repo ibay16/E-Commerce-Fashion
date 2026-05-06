@@ -9,7 +9,7 @@ export class AnalyticsController {
     });
 
     const categoryMap = new Map<string, number>();
-    categorySales.forEach((p) => {
+    categorySales.forEach((p: any) => {
       const cat = p.category?.name || 'Uncategorized';
       categoryMap.set(cat, (categoryMap.get(cat) || 0) + 1);
     });

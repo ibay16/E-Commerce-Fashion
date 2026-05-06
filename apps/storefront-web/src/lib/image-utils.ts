@@ -3,13 +3,11 @@
  * Utility for handling image URLs, especially for Supabase Storage.
  */
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-if (!SUPABASE_URL) {
-  if (process.env.NODE_ENV === 'development') {
-    console.warn("NEXT_PUBLIC_SUPABASE_URL is missing in storefront-web");
-  }
-}
+// Derive Asset Base from API Gateway URL
+// Example: http://localhost:8000/api/storefront -> http://localhost:8000/api/assets/supabase
+const ASSET_BASE = API_URL ? API_URL.replace('/storefront', '/assets/supabase') : '';
 
 const BUCKET_NAME = "products";
 
@@ -37,13 +35,10 @@ export function getImageUrl(path: string | null | undefined): string {
   let cleanPath = path;
   if (cleanPath.startsWith("images/")) cleanPath = cleanPath.slice(7);
 
-  // If SUPABASE_URL is missing, we must NOT fallback to local. Return empty.
-  if (!SUPABASE_URL) {
+  // Use Gateway Proxy if available, otherwise fallback to local empty
+  if (!ASSET_BASE) {
     return "";
   }
 
-  // Ensure no trailing slash on SUPABASE_URL
-  const baseUrl = SUPABASE_URL.endsWith("/") ? SUPABASE_URL.slice(0, -1) : SUPABASE_URL;
-  
-  return `${baseUrl}/storage/v1/object/public/${BUCKET_NAME}/${cleanPath}`;
+  return `${ASSET_BASE}/${BUCKET_NAME}/${cleanPath}`;
 }

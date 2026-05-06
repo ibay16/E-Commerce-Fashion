@@ -31,8 +31,8 @@ export class ReviewController {
       select: { rating: true }
     });
 
-    const ratings = allReviews.map(r => r.rating);
-    const totalRating = ratings.reduce((acc, curr) => acc + curr, 0);
+    const ratings = allReviews.map((r: any) => r.rating);
+    const totalRating = ratings.reduce((acc: number, curr: number) => acc + curr, 0);
     const averageRating = totalRating / ratings.length;
 
     await prisma.product.update({
@@ -58,9 +58,9 @@ export class ReviewController {
     const total = reviews.length;
     const average = total === 0
       ? 0
-      : reviews.reduce((acc, review) => acc + review.rating, 0) / total;
+      : reviews.reduce((acc: number, review: any) => acc + review.rating, 0) / total;
 
-    const formatted = reviews.map((review) => ({
+    const formatted = reviews.map((review: any) => ({
       id: review.id,
       rating: review.rating,
       comment: review.comment,

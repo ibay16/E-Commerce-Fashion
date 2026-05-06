@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import UploadImage from '@components/atoms/UploadImage.svelte';
 	import { env } from '$env/dynamic/public';
+	import { getImageUrl } from '@lib/utils/image';
 	
 	let { data } = $props();
 	let imageUrl = $state('');
@@ -18,20 +19,6 @@
 			p.name.toLowerCase().includes(searchQuery.toLowerCase())
 		)
 	);
-
-	function getImageUrl(url: string | null) {
-		if (!url) return '';
-		if (url.startsWith('http')) return url;
-
-		const SUPABASE_URL = env.PUBLIC_SUPABASE_URL;
-		const BUCKET_NAME = 'products';
-
-		let cleanPath = url.startsWith('/') ? url.slice(1) : url;
-		if (cleanPath.startsWith('images/')) {
-			cleanPath = cleanPath.replace('images/', '');
-		}
-		return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${cleanPath}`;
-	}
 </script>
 
 <div class="hero-header">
@@ -139,12 +126,12 @@
 
 <!-- Assignment Modal -->
 {#if isModalOpen}
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div 
 		class="modal-overlay" 
-		onclick={() => isModalOpen = false} 
+		onclick={(e) => { if (e.target === e.currentTarget) isModalOpen = false; }} 
 		onkeydown={(e) => { if (e.key === 'Escape') isModalOpen = false; }}
-		role="button"
-		tabindex="0"
+		role="presentation"
 	>
 		<div 
 			class="modal-content" 

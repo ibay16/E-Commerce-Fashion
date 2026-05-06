@@ -70,6 +70,7 @@ export default function ReviewModal({ productId, orderId, productName, productIm
                     key={star}
                     type="button"
                     className="review-star-btn"
+                    aria-label={`${star} Bintang`}
                     onMouseEnter={() => setHoverRating(star)}
                     onMouseLeave={() => setHoverRating(0)}
                     onClick={() => setRating(star)}

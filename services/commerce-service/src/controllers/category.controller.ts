@@ -14,10 +14,13 @@ export class CategoryController {
   }
 
   static async createCategory(data: any) {
+    const name = String(data.name || '').trim();
+    const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    
     const category = await prisma.category.create({
       data: {
-        name: data.name,
-        description: data.description,
+        name,
+        slug,
         image: data.image
       }
     });

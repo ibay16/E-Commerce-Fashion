@@ -1,4 +1,4 @@
-import { PrismaClient } from "@novure/database";
+import { PrismaClient } from "../generated/client";
 
 const prisma = new PrismaClient();
 

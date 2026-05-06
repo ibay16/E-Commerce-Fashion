@@ -1,5 +1,5 @@
 import prisma from '../db/client';
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../generated/client";
 
 export class ProductService {
   static async getProducts(params: { categoryId?: string, categoryName?: string, query?: string, idsParam?: string }) {
@@ -113,7 +113,9 @@ export class ProductService {
 
     if (typeof data.description === 'string') updateData.description = data.description;
     if (data.price !== undefined) updateData.price = new Prisma.Decimal(Number(data.price));
-    if (typeof data.categoryId === 'string') updateData.categoryId = data.categoryId;
+    if (typeof data.categoryId === 'string') {
+      updateData.category = { connect: { id: data.categoryId } };
+    }
     if (data.stock !== undefined) updateData.stock = Number(data.stock);
     if (data.isFeatured !== undefined) updateData.isFeatured = Boolean(data.isFeatured);
     if (Array.isArray(data.image)) updateData.image = data.image as string[];
