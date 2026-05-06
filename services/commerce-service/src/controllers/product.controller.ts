@@ -1,4 +1,4 @@
-import prisma from "@/infrastructure/database/prisma";
+import prisma from "../db/client";
 import type { Prisma } from "@prisma/client";
 
 export class ProductController {

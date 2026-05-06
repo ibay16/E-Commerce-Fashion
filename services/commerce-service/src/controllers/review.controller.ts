@@ -1,4 +1,4 @@
-import prisma from "@/infrastructure/database/prisma";
+import prisma from "../db/client";
 
 export class ReviewController {
   static async submitReview(params: { customerId: string, productId: string, orderId: string, rating: number, comment?: string }) {

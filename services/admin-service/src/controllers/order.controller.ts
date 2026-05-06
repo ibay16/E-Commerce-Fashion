@@ -1,4 +1,4 @@
-import { prisma } from '@infrastructure/database/prisma';
+import { prisma } from '../db/client';
 import type { OrderStatus } from '@novure/database';
 
 export class OrderController {

@@ -1,4 +1,4 @@
-import { prisma } from '@infrastructure/database/prisma';
+import { prisma } from '../db/client';
 import { verifyPassword } from '@application/auth/password';
 import jwt from 'jsonwebtoken';
 

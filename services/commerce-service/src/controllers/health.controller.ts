@@ -1,4 +1,4 @@
-import prisma from "@/infrastructure/database/prisma";
+import prisma from "../db/client";
 
 export class HealthController {
   static async checkHealth() {
