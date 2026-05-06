@@ -56,3 +56,19 @@ export const OrderSchema = Joi.object({
   createdAt: Joi.date().iso().required(),
   items: Joi.array().items(OrderItemSchema).optional()
 });
+
+export const CreateProductSchema = Joi.object({
+  name: Joi.string().required(),
+  price: Joi.number().min(0).required(),
+  stock: Joi.number().integer().min(0).required(),
+  categoryId: Joi.string().required(),
+  description: Joi.string().optional().allow(''),
+  images: Joi.array().items(Joi.string()).optional()
+});
+
+export const CreateCategorySchema = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().optional().allow(''),
+  image: Joi.string().optional().allow('')
+});
+

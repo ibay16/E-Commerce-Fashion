@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { env } from '../config/env';
 import routes from './routes';
@@ -24,9 +24,10 @@ app.use(express.json());
 app.get(['/', '/api'], (req: Request, res: Response) => {
   res.json({
     name: "Novure E-Commerce API Gateway",
-    version: "2.1.0",
+    version: "2.2.0",
     status: "RUNNING",
-    pattern: "Modular BFF Architecture"
+    pattern: "Modular BFF Architecture",
+    security: "Hardenened (CORS + Joi)"
   });
 });
 
@@ -65,6 +66,15 @@ app.use('/api', routes);
 app.use((req: Request, res: Response) => {
   console.warn(`[Gateway] 404 Not Found: ${req.method} ${req.url}`);
   res.status(404).json({ success: false, error: 'Route not found in Gateway' });
+});
+
+// Global Error Handler for Gateway
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error('[Gateway Fatal Error]:', err.message);
+  res.status(err.status || 500).json({
+    success: false,
+    error: err.message || 'Internal Server Error'
+  });
 });
 
 export default app;

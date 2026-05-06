@@ -1,11 +1,10 @@
 import express from 'express';
-import cors from 'cors';
-import { env } from '../config/env';
 
 import storefrontCatalogRoutes from './storefront/catalog.routes';
 import storefrontAuthRoutes from './storefront/auth.routes';
 import storefrontCartRoutes from './storefront/cart.routes';
 import storefrontCheckoutRoutes from './storefront/checkout.routes';
+import storefrontAccountRoutes from './storefront/account.routes';
 
 import adminProductsRoutes from './admin/products.routes';
 import adminOrdersRoutes from './admin/orders.routes';
@@ -22,6 +21,7 @@ router.use('/geography', geographyProxy);
 
 // 2. Storefront BFF
 router.use('/storefront/auth', storefrontAuthRoutes);
+router.use('/storefront/account', storefrontAccountRoutes);
 router.use('/storefront/cart', storefrontCartRoutes);
 router.use('/storefront/checkout', storefrontCheckoutRoutes);
 router.use('/storefront/orders', storefrontCheckoutRoutes); // Reuse for orders
@@ -33,7 +33,7 @@ router.use('/admin/auth', adminUsersRoutes);
 router.use('/admin/shipping', adminManagementRoutes);
 router.use('/admin/storefront/orders', adminOrdersRoutes);
 router.use('/admin/storefront/analytics', adminOrdersRoutes);
-router.use('/admin/storefront/products', adminProductsRoutes);
+router.use('/admin/storefront', adminProductsRoutes);
 router.use('/admin/storefront/categories', adminProductsRoutes);
 router.use('/admin/management', adminManagementRoutes);
 
