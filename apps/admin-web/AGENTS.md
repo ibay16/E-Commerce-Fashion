@@ -1,45 +1,67 @@
 # Admin Web Agent Guidelines (SvelteKit 2)
 
-## 1. Instruksi dan Panduan
+## 1. Instruksi dan Panduan Teknis Mendalam
 
-Dokumen ini adalah panduan fundamental untuk semua agen AI dan pengembang yang bekerja pada aplikasi `admin-web`.
+Dokumen ini merupakan panduan arsitektur ketat untuk aplikasi `admin-web`. SvelteKit pada aplikasi ini difungsikan murni sebagai *BFF-consumer* (Bukan backend penyedia layanan).
 
-### Arsitektur: Headless First
-- **Zero Direct DB Access**: Dilarang mengimpor klien basis data (Prisma) di frontend. Semua data wajib diambil dari API Gateway atau layanan internal (via URL Gateway).
-- **Modular Data Fetching**: Jaga agar fungsi `load` di `+page.server.ts` tetap tipis. Delegasikan logika pemanggilan data yang kompleks ke lapisan klien API di `src/lib/api/`.
+### Arsitektur Inti: Headless SvelteKit
+- **Agnostik Basis Data**: Direktori `apps/admin-web` dilarang keras menginisialisasi modul seperti `@prisma/client`. SvelteKit digunakan semata-mata untuk merender SSR (Server-Side Rendering) HTML dan menyediakan lapisan API internal tipis yang hanya meneruskan (*forward*) panggilan ke API Gateway utama.
 
-### SvelteKit 2
-- **Route Groups**: Gunakan grup rute berpusat layout seperti `(dashboard)` dan `(auth)` untuk memisahkan area publik dan privat tanpa mempengaruhi struktur URL.
-- **Cookies**: Saat mengatur atau menghapus cookie di SvelteKit 2, selalu tentukan secara eksplisit parameter `path: '/'`.
-- **State Management**: Gunakan Svelte 5 Runes (`$state`, `$derived`, `$effect`, `$props`) sebagai standar reaktivitas baru.
+### Svelte 5 Runes (Reaktivitas Modern)
+Kode komponen diwajibkan menggunakan pola reaktivitas **Svelte 5 Runes**:
+- `$props()`: Pendeklarasian properti masuk. Gantikan standar lama `export let variable`.
+- `$state()`: Digunakan untuk nilai primitif atau objek yang dapat bermutasi secara lokal.
+- `$derived()`: Digunakan untuk nilai turunan komputasi dari `$state()` atau `$props()`.
+- `$effect()`: Sebagai pengganti `onMount` atau `afterUpdate` untuk menangani efek samping (*side effects*) yang bergantung pada pelacakan referensi lokal. Peringatan lint `state_referenced_locally` sering terjadi jika `$state` direferensikan dalam penutupan yang salah; gunakan blok penugasan eksplisit atau `$derived`.
 
-### Standar UI/UX
-- **Kepadatan Data (Data Density)**: Antarmuka admin harus mampu menyajikan informasi yang padat namun tetap rapi dan mudah dibaca (misal, tabel transaksi).
-- **Konsistensi Komponen**: Gunakan komponen standar seperti `InsightCard` untuk metrik dan `StatusPill` untuk label status transaksi.
-- **Visual Hierarchy**: Gunakan tipografi yang kuat (ukuran, ketebalan) untuk membedakan angka metrik utama, label, dan informasi pendukung.
-- **Minimalist Analytics**: Tampilkan diagram dan grafik yang bersih, terfokus pada tren utama (misalnya `SalesVelocityChart`).
+### SvelteKit Loaders & Actions
+- **Load Functions (`+page.server.ts`)**:
+  - Gunakan `import type { PageServerLoad } from './$types';`.
+  - Akses `fetch` parameter bawaan SvelteKit. Klien `DashboardAPI` bergantung pada instansiasi `fetch` spesifik halaman untuk memastikan penerusan header cookie secara mulus.
+- **API Routes (`+server.ts`)**:
+  - Selalu beri tipe ekspilisit `import { type RequestEvent, json } from '@sveltejs/kit';`.
+  - Kesalahan *implicit any* (`Binding element 'request' implicitly has an 'any' type`) akan memecahkan CI *type-check*. Pastikan tanda tangannya `export async function GET({ request, url }: RequestEvent)`.
 
-### Struktur & Alias
-- Patuhi pola *Atomic Design* untuk komponen UI (`atoms`, `molecules`, `organisms`).
-- Kelompokkan logika bisnis ke dalam folder `features/`.
-- **Sentralisasi CSS**: Letakkan semua file gaya di `src/styles/`.
-- **Path Aliases**: Selalu gunakan alias resmi SvelteKit yang telah dikonfigurasi: `@components`, `@features`, `@styles`, `@lib`, dan `@/`.
+### Manajemen Cookie (Otentikasi Admin)
+Sistem ini menggunakan JWT berbasis cookie (`novure_jwt`).
+- SvelteKit mensyaratkan `path: '/'` saat Anda mengatur atau menghapus cookie agar berlaku secara global.
+- Logika pengelolaan (*login/logout*) harus diisolasi di `src/lib/auth/session.ts` atau endpoint SvelteKit di `src/routes/(auth)/logout/auth-logout.handler.ts`.
+
+### Standar UI/UX Admin Dashboard
+- **Komponen Modular Terpusat**: Hindari gaya HTML *inline*. Gunakan kelas-kelas spesifik yang didefinisikan dalam `src/styles/admin.css` (mis. `.insight-card`, `.btn-studio`).
+- **Aksesibilitas (A11y)**:
+  - Jangan lekatkan interaksi klik (`onclick`) pada elemen non-semantik seperti `<div>` jika bisa menggunakan `<button>` atau `<a>`.
+  - Apabila Anda *harus* melakukannya (seperti pada *backdrop* modal), pastikan properti `role="button"`, `tabindex="0"`, dan *event handler* `onkeydown={(e) => e.key === 'Enter' && action()}` ditambahkan. Svelte akan memunculkan *warning* ketat bila ini diabaikan.
 
 ---
 
 ## 2. Kondisi Saat Ini (Source of Truth)
 
-Berikut adalah gambaran sistem pada `admin-web` saat ini:
+Berikut adalah anatomi presisi dari aplikasi `admin-web` pada waktu terkini:
 
-- **Framework**: SvelteKit 2 (dengan dukungan fitur Svelte 5).
-- **Hierarki Rute (`src/routes/`)**:
-  - `(auth)/`: Menangani alur identitas (`login`, `logout`).
-  - `(dashboard)/`: Rute yang dilindungi. Mencakup `analytics`, `categories`, `orders`, dan `products`.
-- **Struktur Komponen & Fitur**:
-  - `src/features/`: Logika domain bisnis (`analytics`, `customer`, `order`, `products`). *Catatan: Berbeda dengan storefront, admin menggunakan ejaan `products`.*
-  - `src/components/`: Antarmuka modular (termasuk `StatusPill.svelte` di `atoms`, `InsightCard.svelte` di `molecules`).
-- **Data Layer (`src/lib/api/`)**:
-  Klien API modular yang berkomunikasi dengan API Gateway. Berisi: `analytics.ts`, `config.ts`, `dashboard.ts` (orkestrator), `orders.ts`, `products.ts`, dan *placeholder* `supabase.ts`.
-- **Manajemen Sesi**:
-  Logika logout ditangani di `lib/auth/session.ts` dan tereksekusi pada *endpoint* `/api/logout/auth-logout.handler.ts` (yang di-mount di rute `(auth)/logout`).
-- **Styling**: Tersentralisasi di `src/styles/` dengan pembagian utama `globals.css` (reset & utilitas) dan `admin.css` (gaya spesifik dashboard).
+### Struktur Direktori (`src/`)
+- `routes/` (Pola SvelteKit File-Based Routing)
+  - `(auth)/`: Berisi alur autentikasi. Terdapat `/login` (dengan `+page.server.ts` yang mengirim kredensial ke Gateway lalu mengatur cookie lokal) dan `/logout` (endpoint `+server.ts`).
+  - `(dashboard)/`: Rute utama yang diamankan. Dilengkapi file `+layout.svelte` terpusat yang memuat navigasi Sidebar/Header.
+    - `/analytics`: Analisis visual, tren *Velocity*, Model ML (mockup arsitektur).
+    - `/categories`: Manajemen grup katalog.
+    - `/orders`: Tabel pesanan komprehensif, pelacakan status (`ShippingTrack`).
+    - `/products`: Inventaris komoditas dasar. Rute ini menggunakan ejaan **`products`** secara konsisten.
+- `features/`
+  - Isolasi Logika UI. Terbagi atas domain `analytics`, `catalog`, `order`, dan `products`.
+  - Berisi komponen spesifik (seperti `ExecutiveSummary.svelte`, `ProductFilter.svelte`).
+- `components/`
+  - Menerapkan pola *Atomic Design*.
+  - `atoms/`: `UploadImage.svelte` (dengan *graceful degradation* untuk Supabase), `StatusPill.svelte`.
+  - `molecules/`: `InsightCard.svelte`.
+- `lib/`
+  - `api/`: Berisi klien komunikasi Gateway murni (`analytics.ts`, `config.ts`, `dashboard.ts`, `orders.ts`, `products.ts`, `supabase.ts`). Pemetaan URL menggunakan `INTERNAL_API_URL` dengan pola penulisan `${GATEWAY_URL}/api/admin`.
+  - `auth/`: `session.ts` untuk abstraksi manipulasi cookie.
+- `styles/`
+  - `globals.css`: Variabel CSS dan *reset*.
+  - `admin.css`: Kelas-kelas atomik untuk *grid* dan *layouting* dasbor (seperti form-grid 2 kolom, utilitas `.text-right`, dll).
+- `types/`
+  - Tersedia untuk Tipe data Svelte global dan penghubung antarmuka Prisma (jika diambil lewat kontrak API Gateway).
+
+### Konfigurasi Inti
+- `svelte.config.js`: Telah dikonfigurasikan dengan *path aliases* komprehensif (`@components`, `@features`, `@styles`, `@lib`, `@/`) untuk mencegah resolusi *import* yang membingungkan.

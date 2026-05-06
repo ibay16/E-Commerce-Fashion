@@ -1,37 +1,49 @@
 # API Gateway Agent Guidelines (Express BFF)
 
-## 1. Instruksi dan Panduan
+## 1. Instruksi dan Panduan Teknis Mendalam
 
-Dokumen ini adalah mandat fundamental untuk pengembangan pada `api-gateway`. Gateway ini bertindak sebagai penjaga gerbang tunggal dan pengatur lalu lintas ke seluruh ekosistem *backend*.
+Dokumen ini memaparkan aturan mikroskopik untuk memodifikasi `api-gateway`. Gateway (pada `port 8000`) adalah jantung dari sistem E-Commerce ini. Satu kesalahan konfigurasi proksi berpotensi menyebabkan kebocoran data silang layanan atau serangan eksfiltrasi.
 
-### Arsitektur: Backend for Frontend (BFF)
-- **Separation of Concerns**: Gateway harus memisahkan jalur endpoint untuk *storefront* (konsumen) dan *admin* (manajemen) secara eksplisit.
-- **Single Point of Entry**: Semua permintaan dari klien eksternal wajib masuk melalui port Gateway (8000). Jangan pernah mengekspos layanan internal langsung ke internet.
-- **Proxy Configuration**: Selalu gunakan fungsi pabrik (`factory function`) `proxyOptions` yang ada di `proxies/common.proxy.ts` untuk memastikan penerusan header (termasuk JWT dan Internal Key) konsisten ke layanan hilir (*downstream services*).
+### Arsitektur BFF (Backend for Frontend)
+API Gateway ini menerapkan pola isolasi lalu lintas yang ketat:
+- Konsumen akhir (*storefront*) dan pengelola (*admin*) memanggil rute turunan yang diisolasi (mis. `/api/storefront/*` vs `/api/admin/*`).
+- Modul internal di belakang gateway (`commerce-service`, `admin-service`, `customer-service`) adalah layanan *microservice* modular (di-deploy dalam Docker) yang di-proksi oleh gateway.
 
-### Keamanan & Validasi
-- **Autentikasi Terpusat**: Gunakan middleware `authenticateJWT` untuk melindungi rute yang sensitif. Gateway bertanggung jawab untuk memverifikasi token dan meneruskan data pengguna (via header `x-user-id` dan `x-user-role`) ke backend.
-- **Internal Service Mesh**: Lindungi jalur komunikasi antar-layanan internal (tanpa sesi pengguna) dengan memvalidasi header `x-internal-key` terhadap variabel `INTERNAL_SERVICE_KEY`.
-- **Validasi Payload**: Lakukan validasi ketat pada *body*, *query*, dan parameter permintaan menggunakan skema `Joi`. Import skema standar ini dari paket bersama `@novure/contracts`.
+### Panduan Manajemen Proksi (`http-proxy-middleware` v3)
+Semua konfigurasi proksi **harus mewarisi (*extend*)** fungsi `proxyOptions` dari `src/proxies/common.proxy.ts`. 
+- **`fixRequestBody`**: Karena Gateway menggunakan `express.json()` (untuk membaca body guna validasi Joi), *stream* data `req.body` telah dikonsumsi. Fungsi bawaan `fixRequestBody` dari modul proxy dipanggil dalam *hook* `onProxyReq` untuk menyuntikkan ulang (`re-stringify`) *body JSON* sebelum diteruskan ke *microservice* hilir. Jangan pernah menghapus logika ini.
+- **Cookies & Headers Validation**: Gateway bertanggung jawab menyebarkan cookie `novure_jwt` dan header terdekripsi `x-user-id` serta `x-user-role`. Jika proxy kustom dibuat, penyalinan header ini wajib disertakan.
 
-### Manajemen Rute
-- Gunakan `express.Router()` secara modular. Hindari penumpukan logika rute di `index.ts` atau `app.ts`.
-- Terapkan *path rewriting* di tingkat proxy (misalnya, mengubah `/api/admin/auth` menjadi rute internal layanan admin) agar *endpoint* eksternal tetap rapi.
+### Protokol Keamanan Tingkat Lanjut
+- **Otentikasi JWT (`src/middlewares/auth.ts`)**: 
+  - Mencari token berurutan dari 1) `Authorization: Bearer` lalu 2) cookie `novure_jwt`.
+  - Jika token tidak valid atau kadaluwarsa, wajib mengembalikan kode `401 Unauthorized` dengan struktur JSON amplop (terdapat `{ success: false }`).
+- **Internal Service Mesh (`x-internal-key`)**:
+  - Antar-microservice sering kali perlu melakukan panggilan sinkron. Daripada layanan membuat JWT palsu, layanan internal memanggil API Gateway dengan menyertakan header `x-internal-key` (sesuai nilai `process.env.INTERNAL_SERVICE_KEY`).
+  - Middleware otentikasi akan mengabaikan pengecekan JWT *(bypass)* jika kunci internal ini tervalidasi. Jangan pernah membocorkan kunci ini ke *frontend client*.
+- **Validasi Permintaan (Joi)**:
+  - Sebelum diteruskan (di-proksi) ke layanan hilir, rute-rute publik spesifik memanggil `validate(schema)` dari `src/middlewares/validate.ts`.
+  - Jika format `req.body` salah, gateway akan memblokirnya dengan `400 Bad Request` beserta detail struktur (*path*) kesalahannya. Semua skema validasi wajib merujuk ke modul *shared* `@novure/contracts`.
 
 ---
 
 ## 2. Kondisi Saat Ini (Source of Truth)
 
-Berikut adalah implementasi sistem pada `api-gateway` saat ini:
+Inilah topologi lengkap dari layanan API Gateway saat ini:
 
-- **Versi Layanan**: API Gateway v2.1.0 (Modular BFF Architecture).
-- **Core Setup (`src/app.ts`)**: Konfigurasi inti Express, pengaturan CORS yang terikat pada `ALLOWED_ORIGINS`, *parser body*, dan *health check* menyeluruh (mem-ping semua layanan hilir).
-- **Hierarki Rute (`src/routes/`)**:
-  - `storefront/`: Memiliki sub-rute `auth.routes.ts`, `cart.routes.ts`, `catalog.routes.ts`, dan `checkout.routes.ts`.
-  - `admin/`: Memiliki sub-rute `management.routes.ts`, `orders.routes.ts`, `products.routes.ts`, dan `users.routes.ts`.
-- **Konfigurasi Proxy (`src/proxies/`)**:
-  - `common.proxy.ts`: Konfigurasi dasar untuk *request fixing* dan penerusan *cookie/header*.
-  - `commerce.proxy.ts`, `admin.proxy.ts`, `geography.proxy.ts`: Definisi proxy spesifik untuk tiap target layanan. Menyertakan mekanisme perombakan jalur (*path rewriting*) cerdas (contoh: `adminAuthProxy` yang merutekan login admin ke `/api/admin/management/auth` di `admin-service`).
-- **Middleware Terpusat (`src/middlewares/`)**:
-  - Berisi `auth.ts` (menangani otentikasi JWT dan pengecekan kunci internal) serta `validate.ts` (middleware validasi Joi).
-- **Konfigurasi Lingkungan (`config/env.ts`)**: Semua variabel lingkungan dikonsolidasikan dan diekspor dengan tipe yang aman dari file ini.
+### Struktur Direktori Inti
+- `config/`
+  - `env.ts`: Satu-satunya titik validasi dan pengumpulan *Environment Variables* (PORT, JWT_SECRET, target URL microservices, dan daftar *Whitelist* CORS). Menggunakan metode ini untuk mencegah *TypeError* `undefined` saat *runtime*.
+- `src/`
+  - `app.ts`: Titik pangkal (Entry point) instansiasi aplikasi Express. Di sinilah terpasang fungsi CORS tingkat tinggi, *body parser*, dan endpoint `/health` (mem-ping semua microservice untuk memeriksa ketersediaan sistem penuh secara simultan).
+- `src/middlewares/`
+  - `auth.ts`: Middleware validasi JWT dan verifikasi Mesh internal.
+  - `validate.ts`: Fungsi *High-order* yang menerima instansi objek Joi dan mengembalikan middleware Express standar.
+- `src/proxies/`
+  - `common.proxy.ts`: Pabrik opsi proksi global (pengatur `onProxyReq`, penanganan *Fix Body*, dan log kegagalan `502 Bad Gateway`).
+  - `admin.proxy.ts`: Konfigurasi koneksi ke `ADMIN_SERVICE_URL`. Mendefinisikan manipulasi *rewrite* seperti `adminAuthProxy` (mengubah pemanggilan `/api/admin/auth` menjadi `/api/admin/management/auth`).
+  - `commerce.proxy.ts`: Menangani perutean produk, katalog, dan *checkout* ke URL e-commerce inti. Memodifikasi prefix `/api/storefront/` menjadi `/api/`.
+  - `geography.proxy.ts`: Proksi passthrough transparan untuk layanan *Emsifa* API Wilayah Indonesia. Menangani isu lintas-domain (CORS) di *client-side*.
+- `src/routes/`
+  - Pola hirarki: Indeks *root* (`index.ts`) mendaftarkan router berdasarkan perannya (mis. `router.use('/storefront', storefrontCatalogRoutes)`).
+  - Terdapat pemisahan jelas antara rute aman (`authenticateJWT` diaktifkan untuk `/cart` dan `/orders`) dan rute terbuka (login, registrasi).
