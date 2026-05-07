@@ -1,5 +1,7 @@
 # Commerce Service Agent Guidelines (Express Layered)
 
+*(Updated 2026-05-07 to reflect standardized routing and Layered Architecture. Existing non-contradictory guidelines must be preserved.)*
+
 ## 1. Instruksi dan Panduan Teknis Mendalam
 
 Dokumen ini adalah spesifikasi arsitektur tingkat rendah untuk `commerce-service`. Layanan ini bertanggung jawab atas domain produk, kategori, ulasan, dan kalkulasi logistik.
@@ -9,7 +11,7 @@ Layanan ini menggunakan pola desain berlapis untuk pemisahan tanggung jawab yang
 - **Routes (`src/routes/`)**: Hanya bertanggung jawab untuk definisi endpoint Express dan pemetaan middleware (seperti validasi Joi). Dilarang memasukkan logika bisnis di sini.
 - **Controllers (`src/controllers/`)**: Bertindak sebagai orkestrator tipis. Mengambil data dari `req` (params, query, body), memanggil layer Service, dan mengembalikan respon dalam amplop `ApiResponse` standar.
 - **Services (`src/services/`)**: **Pusat Logika Bisnis**. Seluruh perhitungan, manipulasi data, dan aturan validasi tingkat tinggi wajib diletakkan di sini agar dapat diuji secara mandiri (*Unit Testable*).
-- **Database Client (`src/db/client.ts`)**: Satu-satunya titik akses untuk instance Prisma yang diimpor dari `@prisma/client` (Client Lokal).
+- **Database Client (`src/db/client.ts`)**: Satu-satunya titik akses untuk instance Prisma, yang sekarang menggunakan `@prisma/adapter-pg` dengan `pg.Pool`.
 
 ### Standar Pengembangan API
 - **Zero UI Logic**: Dilarang keras memasukkan logika rendering atau elemen frontend. Balasan harus selalu berupa JSON murni.
@@ -43,6 +45,6 @@ Layanan ini menggunakan pola desain berlapis untuk pemisahan tanggung jawab yang
 ### Integrasi
 - **Framework**: Express 5.
 - **Database**: PostgreSQL via `@novure/database`.
-- **Runtime**: Node.js 20+ (Eksekusi via `tsx` di lingkungan dev).
+- **Runtime & Execution**: Node.js 20+. Dockerfile menggunakan `npx tsx src/index.ts` untuk menjalankan layanan.
 - **Port**: **3001** (Internal Mesh).
 - **BFF Alignment**: Di-mount oleh API Gateway pada jalur internal `/api/commerce`.

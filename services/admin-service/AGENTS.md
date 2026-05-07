@@ -1,5 +1,7 @@
 # Admin Service Agent Guidelines (Express Layered)
 
+*(Updated 2026-05-07 to reflect standardized routing and Layered Architecture. Existing non-contradictory guidelines must be preserved.)*
+
 ## 1. Instruksi dan Panduan Teknis Mendalam
 
 Dokumen ini merupakan mandat arsitektural untuk `admin-service`. Layanan ini bertanggung jawab atas manajemen pengguna admin, operasional pesanan, dan manajemen logistik internal.
@@ -8,7 +10,7 @@ Dokumen ini merupakan mandat arsitektural untuk `admin-service`. Layanan ini ber
 - **Routes (`src/routes/`)**: Definisi endpoint yang bersih, memisahkan rute manajemen internal dan rute *storefront-exposed*.
 - **Controllers (`src/controllers/`)**: Menangani parsing request dan pemetaan DTO sebelum dikirim ke client.
 - **Services (`src/services/`)**: Mengelola logika bisnis kompleks (seperti verifikasi password admin, perubahan status pesanan massal).
-- **DB Client (`src/db/client.ts`)**: Akses terpusat ke database PostgreSQL.
+- **DB Client (`src/db/client.ts`)**: Akses terpusat ke database PostgreSQL, sekarang menggunakan `@prisma/adapter-pg` dengan `pg.Pool`.
 
 ### Protokol Keamanan
 - **Admin Authentication**: Menggunakan JWT. Rahasia token diambil dari `env.JWT_SECRET`.
@@ -33,5 +35,6 @@ Dokumen ini merupakan mandat arsitektural untuk `admin-service`. Layanan ini ber
 ### Integrasi
 - **Framework**: Express 5.
 - **Database**: PostgreSQL (Prisma).
+- **Runtime & Execution**: Dockerfile menggunakan `npx tsx src/index.ts` untuk menjalankan layanan.
 - **Port**: **4001** (Internal).
 - **BFF Alignment**: Di-mount oleh API Gateway pada jalur internal standar `/api/admin`.

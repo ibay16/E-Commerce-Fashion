@@ -1,5 +1,7 @@
 # API Gateway Agent Guidelines (Express BFF)
 
+*(Updated 2026-05-07 to reflect standardized routing and Layered Architecture. Existing non-contradictory guidelines must be preserved.)*
+
 ## 1. Instruksi dan Panduan Teknis Mendalam
 
 Dokumen ini adalah mandat operasi untuk `api-gateway`. Gateway ini bertindak sebagai **Backend for Frontend (BFF)**, penjaga keamanan, dan pengatur lalu lintas tunggal untuk seluruh ekosistem.
@@ -9,7 +11,7 @@ Dokumen ini adalah mandat operasi untuk `api-gateway`. Gateway ini bertindak seb
 - **Proxying (http-proxy-middleware v3)**: 
   - Gunakan pabrik `proxyOptions` di `src/proxies/common.proxy.ts`. 
   - Wajib memanggil `fixRequestBody(proxyReq, req)` karena penggunaan middleware `express.json()`.
-- **Path Rewriting**: Gunakan jalur yang konsisten antara publik dan internal (mis. `/api/admin/auth`) untuk menyederhanakan pemeliharaan dan sesuai dengan standar API Gateway yang baru.
+- **Path Rewriting**: Gateway secara eksplisit melakukan rewrite rute BFF (misal `/api/storefront/...` dan `/api/admin/storefront/...`) ke prefix standar internal (`/api/commerce/`, `/api/admin/`, `/api/customer/`).
 - **Kontrak Layanan**: Downstream service mengikuti arsitektur berlapis (controllers/services/db). Gateway tidak bergantung pada struktur internalnya.
 
 ### Protokol Keamanan & Validasi
@@ -45,6 +47,9 @@ Dokumen ini adalah mandat operasi untuk `api-gateway`. Gateway ini bertindak seb
 - `admin.proxy.ts`: Merutekan ke port **4001** (dengan rewrite standar ke `/api/admin`).
 - `customer.proxy.ts`: Merutekan ke port **4002** (dengan rewrite standar ke `/api/customer`).
 - `geography.proxy.ts`: Menangani passthrough ke API *Emsifa* eksternal.
+
+### Integrasi & Runtime
+- **Execution Engine**: Dockerfile menggunakan `npx tsx index.ts` untuk menjalankan layanan, melewati isu kompilasi `dist/`.
 
 ### Middleware Terpusat
 - `auth.ts`: Logika verifikasi ganda (JWT & Internal Key).

@@ -1,5 +1,7 @@
 # Admin Web Agent Guidelines (SvelteKit 2)
 
+*(Updated 2026-05-07 to reflect standardized routing and Layered Architecture. Existing non-contradictory guidelines must be preserved.)*
+
 ## 1. Instruksi dan Panduan Teknis Mendalam
 
 Dokumen ini merupakan mandat arsitektural untuk pengembangan `admin-web`. Aplikasi ini adalah dasbor operasional yang mengutamakan kepadatan data dan akurasi informasi.

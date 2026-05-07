@@ -1,5 +1,7 @@
 # Customer Service Agent Guidelines (Express Layered)
 
+*(Updated 2026-05-07 to reflect standardized routing and Layered Architecture. Existing non-contradictory guidelines must be preserved.)*
+
 ## 1. Instruksi dan Panduan Teknis Mendalam
 
 Dokumen ini adalah spesifikasi arsitektur untuk `customer-service`. Layanan ini adalah modul tersibuk yang menangani seluruh siklus hidup pelanggan: identitas, profil, keranjang, hingga proses checkout.
@@ -10,7 +12,7 @@ Dokumen ini adalah spesifikasi arsitektur untuk `customer-service`. Layanan ini 
 - **Services (`src/services/`)**: **Tempat tinggal Logika Bisnis**. 
   - `CheckoutService`: Menangani integrasi Midtrans yang kompleks.
   - `CartService`: Menangani hidrasi data produk dari layanan lain melalui Gateway.
-- **DB Client (`src/db/client.ts`)**: Satu-satunya pintu gerbang ke Prisma.
+- **DB Client (`src/db/client.ts`)**: Satu-satunya pintu gerbang ke Prisma, menggunakan `@prisma/adapter-pg` dengan `pg.Pool`.
 
 ### Integrasi Pembayaran (Midtrans)
 - Seluruh logika **Midtrans Core API** (Charge, Status, Webhook) wajib diisolasi di dalam `CheckoutService`.
@@ -40,6 +42,7 @@ Dokumen ini adalah spesifikasi arsitektur untuk `customer-service`. Layanan ini 
 ### Integrasi
 - **Framework**: Express 5.
 - **Database**: PostgreSQL (Prisma).
+- **Runtime & Execution**: Dockerfile menggunakan `npx tsx src/index.ts` untuk menjalankan layanan.
 - **Port**: **4002** (Internal Docker).
 - **BFF Alignment**: Di-mount oleh API Gateway pada jalur internal `/api/customer`.
 - **Mesh Communication**: Memanggil `commerce-service` melalui API Gateway (8000) menggunakan `INTERNAL_SERVICE_KEY` untuk mengambil data produk terkini.

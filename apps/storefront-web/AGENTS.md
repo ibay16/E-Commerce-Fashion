@@ -1,12 +1,14 @@
 # Storefront Web Agent Guidelines (Next.js 15)
 
+*(Updated 2026-05-07 to reflect standardized routing and Layered Architecture. Existing non-contradictory guidelines must be preserved.)*
+
 ## 1. Instruksi dan Panduan Teknis Mendalam
 
 Dokumen ini adalah spesifikasi arsitektur tingkat rendah untuk semua agen AI dan pengembang yang memodifikasi `storefront-web`. 
 
 ### Arsitektur Inti: Murni Headless (Presentation Layer)
 - **Larangan Akses Database Langsung**: `storefront-web` adalah lapisan presentasi. Dilarang menginstal atau menggunakan `@prisma/client` atau SDK database apapun. Semua interaksi data wajib melalui API Gateway (`:8000`).
-- **Pola BFF (Backend for Frontend)**: Frontend mengonsumsi endpoint yang telah dioptimalkan oleh Gateway (`/api/storefront/*`). Jangan pernah mencoba memanggil layanan backend (seperti port 3001 atau 4002) secara langsung.
+- **Pola BFF (Backend for Frontend)**: Frontend mengonsumsi endpoint yang telah dioptimalkan oleh Gateway (`/api/storefront/*`, yang secara internal di-rewrite oleh Gateway ke prefix terstandarisasi). Jangan pernah mencoba memanggil layanan backend (seperti port 3001 atau 4002) secara langsung.
 - **Kontrak Backend**: Layanan backend menggunakan arsitektur berlapis (controllers/services/db). Frontend tidak bergantung pada struktur internal backend, hanya kontrak API.
 
 ### Next.js 15 & React 19: Standar Modern
