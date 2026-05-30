@@ -17,7 +17,8 @@ const BUCKET_NAME = "products";
  * @param path The local path or filename (e.g., "/images/tees1.png" or "tees1.png")
  * @returns The full Supabase Storage URL or an empty string if none
  */
-export function getImageUrl(path: string | null | undefined): string {
+export function getImageUrl(pathInput: string | string[] | null | undefined): string {
+  const path = Array.isArray(pathInput) ? pathInput[0] : pathInput;
   if (!path) return "";
 
   // If it's already an absolute URL, data URI, or a root-relative local path, return it

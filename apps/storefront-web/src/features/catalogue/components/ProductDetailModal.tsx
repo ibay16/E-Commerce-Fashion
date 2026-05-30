@@ -109,7 +109,7 @@ export default function ProductDetailModal({ product, onClose }: Props) {
             {/* ── Left: product image ── */}
             <div className="modal-image-col">
               <Image
-                src={product.images?.[0] || product.image || "/images/model1.jpg"}
+                src={product.images?.[0] || product.image || "/images/about/model1.png"}
                 alt={product.name}
                 fill
                 className="object-cover object-top"

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import * as cookie from 'cookie';
+import { parse } from 'cookie';
 import { AuthUser } from '../types/index.js';
 
 export interface AuthRequest extends Request {
@@ -22,7 +22,7 @@ export function createAuthMiddleware(jwtSecret: string, internalKey?: string) {
       token = authHeader.split(' ')[1];
     }
     if (!token && req.headers.cookie) {
-      const cookies = cookie.parse(req.headers.cookie);
+      const cookies = parse(req.headers.cookie);
       token = cookies.novarium_jwt || null;
     }
 

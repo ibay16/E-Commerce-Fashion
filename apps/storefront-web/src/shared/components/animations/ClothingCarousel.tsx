@@ -83,7 +83,7 @@ export default function ClothingCarousel({
                 </span>
                 <div className="card-image" style={{ height: "220px" }}>
                   <Image
-                    src={getImageUrl(currentTee.image || "model1.jpg")}
+                    src={getImageUrl(currentTee.image || "/images/about/model1.png")}
                     alt={currentTee.name || "Clothing Item"}
                     fill
                     className="object-contain"
@@ -100,7 +100,7 @@ export default function ClothingCarousel({
                 </span>
                 <div className="card-image" style={{ height: "220px" }}>
                   <Image
-                    src={getImageUrl(currentJeans.image || "model1.jpg")}
+                    src={getImageUrl(currentJeans.image || "/images/about/model1.png")}
                     alt={currentJeans.name || "Clothing Item"}
                     fill
                     className="object-contain"

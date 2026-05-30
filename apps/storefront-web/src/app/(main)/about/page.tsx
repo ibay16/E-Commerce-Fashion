@@ -19,7 +19,7 @@ export default function AboutPage() {
       
       {/* Sections with required props */}
       <AboutHero scrollYProgress={scrollYProgress} />
-      <AboutStory studioModel1="/images/model1.jpg" />
+      <AboutStory studioModel1="/images/about/model1.png" />
       <AboutValues />
       <AboutTeam />
       <AboutCTA />

@@ -43,7 +43,7 @@ export default function InfiniteMarquee({ images, speed = 25, itemHeight = 380 }
             }}
           >
             <Image
-              src={getImageUrl(src || "model1.jpg")}
+              src={getImageUrl(src || "/images/about/model1.png")}
               alt={`Featured item ${idx + 1}`}
               width={288}
               height={Math.round(itemHeight * 0.9)}

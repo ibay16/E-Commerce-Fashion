@@ -45,7 +45,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     >
       <div className="product-card-image">
         <Image
-          src={getImageUrl(product.image || "model1.jpg")}
+          src={getImageUrl(product.image || "/images/about/model1.png")}
           alt={product.name}
           fill
           className="object-cover object-top"
