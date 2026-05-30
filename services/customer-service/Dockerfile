@@ -65,5 +65,5 @@ USER customerjs
 EXPOSE 4002
 ENV PORT=4002
 
-# Run with node
-CMD ["node", "dist/index.js"]
+# Run with node (Memory limited for Railway Free Tier)
+CMD ["node", "--max-old-space-size=256", "dist/index.js"]

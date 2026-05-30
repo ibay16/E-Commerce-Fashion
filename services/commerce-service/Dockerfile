@@ -66,5 +66,5 @@ USER expressjs
 EXPOSE 3001
 ENV PORT=3001
 
-# Run with node, not tsx
-CMD ["node", "dist/index.js"]
+# Run with node (Memory limited for Railway Free Tier)
+CMD ["node", "--max-old-space-size=256", "dist/index.js"]

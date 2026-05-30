@@ -65,5 +65,5 @@ USER adminjs
 EXPOSE 4001
 ENV PORT=4001
 
-# Run with node
-CMD ["node", "dist/index.js"]
+# Run with node (Memory limited for Railway Free Tier)
+CMD ["node", "--max-old-space-size=256", "dist/index.js"]

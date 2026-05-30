@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../node_modules/@novarium/admin-prisma"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {

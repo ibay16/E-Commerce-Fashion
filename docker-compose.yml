@@ -44,7 +44,7 @@ services:
       - "4002:4002"
     environment:
       - PORT=4002
-      - DATABASE_URL=${CORE_DATABASE_URL}
+      - DATABASE_URL=${ADMIN_DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_KEY=${INTERNAL_SERVICE_KEY:-novarium-internal-mesh-key-2026}
       - COMMERCE_SERVICE_URL=http://commerce-service:3001

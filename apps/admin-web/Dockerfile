@@ -36,16 +36,8 @@ RUN npm run build -w ecommerce-admin
 # Stage 3: Production Dependencies
 FROM node:24.15.0-alpine AS prod-deps
 WORKDIR /app
-COPY package.json package-lock.json ./
-COPY apps/admin-web/package.json ./apps/admin-web/
-COPY apps/storefront-web/package.json ./apps/storefront-web/
-COPY services/commerce-service/package.json ./services/commerce-service/
-COPY services/admin-service/package.json ./services/admin-service/
-COPY services/customer-service/package.json ./services/customer-service/
-COPY packages/contracts/package.json ./packages/contracts/
-COPY packages/database/package.json ./packages/database/
-
-RUN npm ci --omit=dev --ignore-scripts
+COPY apps/admin-web/package.json ./
+RUN npm install --omit=dev --ignore-scripts
 
 # Stage 4: Runner
 FROM node:24.15.0-alpine AS runner
@@ -66,4 +58,4 @@ RUN chown -R sveltekit:nodejs /app
 USER sveltekit
 EXPOSE 4000
 ENV PORT=4000
-CMD ["node", "build"]
+CMD ["node", "--max-old-space-size=256", "build"]
