@@ -31,7 +31,7 @@ export default function AboutValues() {
 
       <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 10 }}>
         {/* Header - Aligned with Style Outlook */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "6rem" }}>
+        <div className="about-values-header">
           <div style={{ flex: 1 }}>
             <SectionLabel number="04" label="Core Pillars" color="rgba(255,255,255,0.4)" />
             <motion.h2
@@ -46,7 +46,7 @@ export default function AboutValues() {
                 marginTop: "1.5rem"
               }}
             >
-              Apa yang<br />Ngedefine Kita
+              Apa yang<br />Men-Define Kita
             </motion.h2>
           </div>
 
@@ -57,19 +57,14 @@ export default function AboutValues() {
             style={{ flex: 1, textAlign: "right" }}
           >
             <p style={{ maxWidth: "350px", marginLeft: "auto", fontSize: "1rem", lineHeight: 1.6, color: "rgba(255,255,255,0.5)", fontWeight: 300 }}>
-              Di Novarium, kita percaya produk terbaik lahir dari keseimbangan 
+              Di Novarium, kita percaya produk terbaik lahir dari keseimbangan
               antara heritage, etika, dan modern engineering.
             </p>
           </motion.div>
         </div>
 
         {/* Bento Grid Layout */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(12, 1fr)",
-          gridAutoRows: "minmax(200px, auto)",
-          gap: "1.5rem"
-        }}>
+        <div className="about-values-grid">
 
           {/* Item 1: Wide */}
           <motion.div

@@ -1,0 +1,83 @@
+/* =========================================
+   ABOUT US PAGE STYLES (RESPONSIVE)
+   ========================================= */
+
+/* --- AboutStory --- */
+.about-story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rem;
+  align-items: center;
+}
+
+.about-story-text-card {
+  position: absolute;
+  bottom: 3rem;
+  right: -4rem;
+  padding: 2.5rem;
+  width: 320px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+  border-radius: 1rem;
+  z-index: 20;
+}
+
+/* --- AboutValues --- */
+.about-values-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 6rem;
+}
+
+.about-values-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(200px, auto);
+  gap: 1.5rem;
+  position: relative;
+}
+
+/* =========================================
+   MOBILE RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+  /* AboutStory Mobile */
+  .about-story-grid {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+  
+  .about-story-text-card {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    width: 100%;
+    margin-top: -2rem;
+  }
+
+  /* AboutValues Mobile */
+  .about-values-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  
+  .about-values-header > div {
+    text-align: left !important;
+  }
+  
+  .about-values-header p {
+    margin-left: 0 !important;
+    text-align: left !important;
+  }
+
+  .about-values-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}

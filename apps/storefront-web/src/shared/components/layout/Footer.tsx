@@ -13,11 +13,6 @@ export default function Footer({ noAnimation = false }: FooterProps) {
   const ref = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  // Do not render footer on profile or cart/checkout pages
-  if (pathname && (pathname.startsWith("/profile") || pathname.startsWith("/catalogue/cart"))) {
-    return null;
-  }
-
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end end"],
@@ -25,6 +20,11 @@ export default function Footer({ noAnimation = false }: FooterProps) {
 
   const rawScale = useTransform(scrollYProgress, [0, 1], [0.96, 1]);
   const scale = useSpring(rawScale, { stiffness: 60, damping: 20 });
+
+  // Do not render footer on profile or cart/checkout pages
+  if (pathname && (pathname.startsWith("/profile") || pathname.startsWith("/catalogue/cart"))) {
+    return null;
+  }
 
   const links = [
     {

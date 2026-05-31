@@ -12,7 +12,7 @@ interface AboutStoryProps {
 export default function AboutStory({ studioModel1 }: AboutStoryProps) {
   return (
     <section style={{ position: "relative", zIndex: 10, padding: "20vh 2rem", background: "#f5f5f3", minHeight: "100vh", display: "flex", alignItems: "center" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8rem", alignItems: "center" }}>
+      <div className="about-story-grid" style={{ maxWidth: "1200px", margin: "0 auto" }}>
         
         <div style={{ position: "relative" }}>
           <motion.div
@@ -35,19 +35,7 @@ export default function AboutStory({ studioModel1 }: AboutStoryProps) {
             initial={{ x: -40, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.6, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              position: "absolute",
-              bottom: "3rem",
-              right: "-4rem",
-              padding: "2.5rem",
-              width: "320px",
-              background: "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.3)",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.04)",
-              borderRadius: "1rem",
-              zIndex: 20
-            }}
+            className="about-story-text-card"
           >
             <span style={{ fontSize: "0.7rem", fontWeight: 800, letterSpacing: "0.3em", color: "#999", textTransform: "uppercase", display: "block", marginBottom: "1rem" }}>
               Filosofi Kita
