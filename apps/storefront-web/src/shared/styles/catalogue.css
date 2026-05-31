@@ -691,6 +691,7 @@
   /* Make pills scroll horizontally */
   .sidebar-pills-row {
     display: flex;
+    flex-direction: row;
     gap: 0.5rem;
     overflow-x: auto;
     padding-bottom: 0.5rem;

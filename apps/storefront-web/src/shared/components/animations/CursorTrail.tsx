@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import { HERO_CLOTHING } from "../../data/products";
 import Image from "next/image";
 
@@ -61,6 +61,50 @@ export default function CursorTrail({ containerRef }: CursorTrailProps) {
     },
     [containerRef]
   );
+
+  // Auto-trail for mobile devices
+  useEffect(() => {
+    let animationFrameId: number;
+    let start: number | null = null;
+    let isMobile = false;
+
+    const simulateMobileTrail = (timestamp: number) => {
+      if (!isMobile) return;
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+
+      // Create a slow figure-8 pattern
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const x = cx + Math.sin(elapsed / 1500) * (window.innerWidth * 0.35); // Slow wide horizontal
+      const y = cy + Math.sin(elapsed / 3000) * (window.innerHeight * 0.25) - 50; // Slower vertical
+
+      // Call handleMouseMove synthetically
+      handleMouseMove({ clientX: x, clientY: y } as unknown as React.MouseEvent);
+
+      animationFrameId = requestAnimationFrame(simulateMobileTrail);
+    };
+
+    const checkMobile = () => {
+      if (window.innerWidth <= 768) {
+        isMobile = true;
+        if (start === null) start = performance.now();
+        animationFrameId = requestAnimationFrame(simulateMobileTrail);
+      } else {
+        isMobile = false;
+        cancelAnimationFrame(animationFrameId);
+        start = null;
+      }
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [handleMouseMove]);
 
   return (
     <>

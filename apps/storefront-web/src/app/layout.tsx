@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/shared/styles/globals.css";
+import "@/shared/styles/mobile.css";
 import { AuthProvider } from "@/core/providers/AuthContext";
 import { CartProvider } from "@/core/providers/CartContext";
 import { ProfileDataProvider } from "@/core/providers/ProfileDataContext";

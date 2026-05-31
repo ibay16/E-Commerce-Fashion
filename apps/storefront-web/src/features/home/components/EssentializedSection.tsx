@@ -90,8 +90,8 @@ export default function EssentializedSection() {
         <>
 
 
-      <div style={{ position: "relative", width: "100%", paddingBottom: "5vw" }}>
-        <motion.div ref={titleRef} style={{ y: yTitle, position: "absolute", top: "2vw", left: 0, right: 0, zIndex: 6 }}>
+      <div className="essentialized-container" style={{ position: "relative", width: "100%", paddingBottom: "5vw" }}>
+        <motion.div className="essentialized-title-wrapper" ref={titleRef} style={{ y: yTitle, position: "absolute", top: "2vw", left: 0, right: 0, zIndex: 6 }}>
           <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
             <h2
               className="essentialized-title"
@@ -128,7 +128,7 @@ export default function EssentializedSection() {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.div style={{ y: yInnerTitle, position: "absolute", top: "-8vw", left: 0, right: 0, zIndex: 1 }}>
+          <motion.div className="essentialized-inner-title-wrapper" style={{ y: yInnerTitle, position: "absolute", top: "-8vw", left: 0, right: 0, zIndex: 1 }}>
             <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
               <h2
                 className="essentialized-title"

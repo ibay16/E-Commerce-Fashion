@@ -24,35 +24,39 @@ export default function InfiniteMarquee({ images, speed = 25, itemHeight = 380 }
   const loopedImages = [...images, ...images];
 
   return (
-    <div style={{ position: "relative", width: "100%", overflow: "hidden", padding: "2rem 0" }}>
+    <div className="marquee-wrapper" style={{ position: "relative", width: "100%", overflow: "hidden" }}>
       <motion.div
-        style={{ display: "flex", gap: "3rem", width: "max-content" }}
+        className="marquee-track"
+        style={{ display: "flex", gap: "2rem", width: "max-content" }}
         animate={{ x: ["-50%", "0%"] }}
         transition={{ duration: speed, repeat: Infinity, ease: "linear" }}
       >
         {loopedImages.map((src, idx) => (
-          <div
-            key={idx}
-            style={{
-              width: "320px",
-              height: `${itemHeight}px`,
-              flexShrink: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Image
-              src={getImageUrl(src || "/images/about/model1.png")}
-              alt={`Featured item ${idx + 1}`}
-              width={288}
-              height={Math.round(itemHeight * 0.9)}
+            <div
+              className="marquee-item"
+              key={idx}
               style={{
-                objectFit: "contain",
-                filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.5))",
+                width: "320px",
+                height: `${itemHeight}px`,
+                position: "relative",
+                flexShrink: 0,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-            />
-          </div>
+            >
+              <Image
+                src={getImageUrl(src || "/images/about/model1.png")}
+                alt={`Featured item ${idx + 1}`}
+                className="marquee-image"
+                fill
+                sizes="(max-width: 768px) 30vw, 300px"
+                style={{
+                  objectFit: "contain",
+                  filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.5))",
+                }}
+              />
+            </div>
         ))}
       </motion.div>
     </div>

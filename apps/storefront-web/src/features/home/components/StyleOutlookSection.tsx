@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 import SectionLabel from "@/shared/components/ui/SectionLabel";
@@ -12,15 +12,21 @@ import { STYLE_PILLS } from "@/shared/data/navigation";
 export default function StyleOutlookSection() {
   const containerRef = useRef<HTMLElement>(null);
   const [activePill, setActivePill] = useState("Active");
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Setup parallax scroll values
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
-  // Left column moves slightly faster/differently than right column
-  const leftColumnY = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const leftColumnY  = useTransform(scrollYProgress, [0, 1], [100, -100]);
   const rightColumnY = useTransform(scrollYProgress, [0, 1], [-50, 150]);
 
   return (
@@ -69,13 +75,19 @@ export default function StyleOutlookSection() {
       {/* Parallax Bento Grid */}
       <div className="bento-grid-container">
         {/* Left Column (Large) */}
-        <motion.div className="bento-col-left" style={{ y: leftColumnY }}>
+        <motion.div
+          className="bento-col-left"
+          style={isMobile ? {} : { y: leftColumnY }}
+        >
           <VideoCard src={STYLE_VIDEOS[0].url} className="large-card" />
           <p className="bento-category">{STYLE_VIDEOS[0].category}</p>
         </motion.div>
 
         {/* Right Column (Stacked) */}
-        <motion.div className="bento-col-right" style={{ y: rightColumnY }}>
+        <motion.div
+          className="bento-col-right"
+          style={isMobile ? {} : { y: rightColumnY }}
+        >
           <div className="bento-item">
             <VideoCard src={STYLE_VIDEOS[1].url} className="small-card" />
             <p className="bento-category right-align">{STYLE_VIDEOS[1].category}</p>
@@ -108,3 +120,4 @@ export default function StyleOutlookSection() {
     </section>
   );
 }
+

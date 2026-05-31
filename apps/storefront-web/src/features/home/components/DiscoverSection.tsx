@@ -15,6 +15,9 @@ export default function DiscoverSection() {
   const [products, setProducts] = useState<CatalogueProduct[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [mobilePage, setMobilePage] = useState(0);
+  const [mobileAnimDir, setMobileAnimDir] = useState<"up" | "down">("up");
+  const [mobileIsAnimating, setMobileIsAnimating] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   
@@ -32,6 +35,7 @@ export default function DiscoverSection() {
   const totalItems = products.length;
   const displayProducts = [...products, ...products, ...products];
 
+  // Desktop carousel
   const handleNext = useCallback(() => {
     if (isAnimating || totalItems === 0) return;
     setIsAnimating(true);
@@ -76,6 +80,34 @@ export default function DiscoverSection() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
+
+  // Mobile paged grid: 4 items per page (2x2)
+  const ITEMS_PER_PAGE = 4;
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+  const mobilePageProducts = products.slice(
+    mobilePage * ITEMS_PER_PAGE,
+    mobilePage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+  );
+
+  const handleMobileNext = useCallback(() => {
+    if (mobileIsAnimating || totalPages <= 1) return;
+    setMobileAnimDir("up");
+    setMobileIsAnimating(true);
+    setTimeout(() => {
+      setMobilePage((p) => (p + 1) % totalPages);
+      setMobileIsAnimating(false);
+    }, 320);
+  }, [mobileIsAnimating, totalPages]);
+
+  const handleMobilePrev = useCallback(() => {
+    if (mobileIsAnimating || totalPages <= 1) return;
+    setMobileAnimDir("down");
+    setMobileIsAnimating(true);
+    setTimeout(() => {
+      setMobilePage((p) => (p - 1 + totalPages) % totalPages);
+      setMobileIsAnimating(false);
+    }, 320);
+  }, [mobileIsAnimating, totalPages]);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -128,7 +160,7 @@ export default function DiscoverSection() {
             </span>
           </motion.button>
 
-          {/* Slider Controls */}
+          {/* Desktop Slider Controls */}
           <div className="slider-controls">
             <motion.button
               className="slider-nav-btn"
@@ -151,7 +183,7 @@ export default function DiscoverSection() {
           </div>
         </motion.div>
 
-        {/* Right: Product Cards Slider (desktop only) */}
+        {/* Right: Desktop Slider */}
         <div className="discover-right-container">
           <motion.div 
             className="discover-right" 
@@ -173,18 +205,63 @@ export default function DiscoverSection() {
           </motion.div>
         </div>
 
-        {/* Mobile 2-column grid (hidden on desktop via CSS) */}
-        <div className="discover-mobile-grid">
-          {products.slice(0, 6).map((product, index) => (
-            <ProductCard
-              key={`mobile-${product.id}`}
-              product={product}
-              index={index}
-            />
-          ))}
+        {/* Mobile 2x2 paged grid */}
+        <div className="discover-mobile-wrapper">
+          <motion.div
+            className="discover-mobile-grid"
+            key={mobilePage}
+            initial={{ opacity: 0, y: mobileAnimDir === "up" ? 40 : -40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: mobileAnimDir === "up" ? -40 : 40 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {mobilePageProducts.map((product, index) => (
+              <ProductCard
+                key={`mobile-${product.id}-${mobilePage}`}
+                product={product}
+                index={index}
+              />
+            ))}
+          </motion.div>
+
+          {/* Mobile nav buttons */}
+          {totalPages > 1 && (
+            <div className="discover-mobile-nav">
+              <motion.button
+                className="discover-mobile-nav-btn"
+                onClick={handleMobilePrev}
+                whileTap={{ scale: 0.92 }}
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={18} />
+              </motion.button>
+
+              <div className="discover-mobile-dots">
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <button
+                    key={i}
+                    className={`discover-mobile-dot${i === mobilePage ? " active" : ""}`}
+                    onClick={() => {
+                      setMobileAnimDir(i > mobilePage ? "up" : "down");
+                      setMobilePage(i);
+                    }}
+                    aria-label={`Page ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+              <motion.button
+                className="discover-mobile-nav-btn"
+                onClick={handleMobileNext}
+                whileTap={{ scale: 0.92 }}
+                aria-label="Next page"
+              >
+                <ChevronRight size={18} />
+              </motion.button>
+            </div>
+          )}
         </div>
       </div>
     </section>
   );
 }
-

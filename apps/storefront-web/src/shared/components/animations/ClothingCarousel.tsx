@@ -44,14 +44,13 @@ export default function ClothingCarousel({
       }}
     >
       {/* Controls + Cards */}
-      <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
+      <div className="carousel-controls-wrapper" style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%", maxWidth: "800px", justifyContent: "center", padding: "0 1rem" }}>
         <button
+          className="carousel-arrow-btn"
           aria-label="Previous combination"
           onClick={onPrev}
           style={{
-            width: 54,
-            height: 54,
-            borderRadius: "50%",
+            flexShrink: 0,
             background: "#fff",
             display: "flex",
             alignItems: "center",
@@ -61,10 +60,10 @@ export default function ClothingCarousel({
             boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
           }}
         >
-          <ChevronLeft size={28} color="#111" />
+          <ChevronLeft size={24} color="#111" />
         </button>
  
-        <div style={{ width: 640, position: "relative" }}>
+        <div className="carousel-cards-wrapper" style={{ width: "100%", maxWidth: "640px", position: "relative" }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={comboKey}
@@ -72,17 +71,17 @@ export default function ClothingCarousel({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -15 }}
               transition={{ duration: 0.4 }}
-              style={{ display: "flex", gap: "2rem", width: "100%", margin: 0 }}
+              style={{ display: "flex", width: "100%", margin: 0 }}
               className="essentialized-mobile-grid"
             >
               <div
                 className="floating-product-card"
-                style={{ flex: 1, padding: "2rem", width: "auto", height: "300px" }}
+                style={{ flex: 1, width: "auto" }}
               >
-                <span className="card-label" style={{ fontSize: "1.1rem" }}>
+                <span className="card-label">
                    {currentTee.name}
                 </span>
-                <div className="card-image" style={{ height: "220px" }}>
+                <div className="card-image">
                   <Image
                     src={getImageUrl(currentTee.image || "/images/about/model1.png")}
                     alt={currentTee.name || "Clothing Item"}
@@ -94,12 +93,12 @@ export default function ClothingCarousel({
               </div>
               <div
                 className="floating-product-card"
-                style={{ flex: 1, padding: "2rem", width: "auto", height: "300px" }}
+                style={{ flex: 1, width: "auto" }}
               >
-                <span className="card-label" style={{ fontSize: "1.1rem" }}>
+                <span className="card-label">
                   {currentJeans.name}
                 </span>
-                <div className="card-image" style={{ height: "220px" }}>
+                <div className="card-image">
                   <Image
                     src={getImageUrl(currentJeans.image || "/images/about/model1.png")}
                     alt={currentJeans.name || "Clothing Item"}
@@ -114,12 +113,11 @@ export default function ClothingCarousel({
         </div>
 
         <button
+          className="carousel-arrow-btn"
           aria-label="Next combination"
           onClick={onNext}
           style={{
-            width: 54,
-            height: 54,
-            borderRadius: "50%",
+            flexShrink: 0,
             background: "#fff",
             display: "flex",
             alignItems: "center",
@@ -129,7 +127,7 @@ export default function ClothingCarousel({
             boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
           }}
         >
-          <ChevronRight size={28} color="#111" />
+          <ChevronRight size={24} color="#111" />
         </button>
       </div>
 

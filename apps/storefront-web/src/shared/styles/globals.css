@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./mobile.css";
 
 :root {
   --background: #f5f5f3;

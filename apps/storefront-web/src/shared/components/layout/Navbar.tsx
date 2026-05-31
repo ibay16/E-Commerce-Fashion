@@ -22,10 +22,6 @@ export default function Navbar({ isInline = false }: NavbarProps) {
   const isHome = pathname === "/";
   const isProfile = pathname === "/profile";
 
-  // If this is the global Navbar (not inline), and we are on home, do not render it!
-  // The home page will render its own <Navbar isInline /> below the Hero.
-  if (!isInline && isHome) return null;
-
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (isProfile) {
       setScrolled(latest > 350);
@@ -45,8 +41,13 @@ export default function Navbar({ isInline = false }: NavbarProps) {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
+  // If this is the global Navbar (not inline), and we are on home, do not render it!
+  // The home page will render its own <Navbar isInline /> below the Hero.
+  if (!isInline && isHome) return null;
+
+  const baseClass = isInline ? styles.navbarSticky : (isProfile ? styles.navbarAbsolute : styles.navbar);
   const navbarClassName = [
-    isInline ? styles.navbarSticky : styles.navbar,
+    baseClass,
     scrolled ? styles.navbarScrolled : "",
     !scrolled && !isInline && isProfile ? styles.navbarTransparent : styles.navbarDefault,
   ]
@@ -133,9 +134,9 @@ export default function Navbar({ isInline = false }: NavbarProps) {
               {[
                 { href: "/", label: "Home" },
                 { href: "/catalogue", label: "Katalog" },
-                { href: "/about", label: "About Us" },
-                { href: "/catalogue/cart", label: "My Cart" },
                 { href: "/profile", label: "Profil" },
+                { href: "/catalogue/cart", label: "My Cart" },
+                { href: "/about", label: "About Us" },
               ].map((item, i) => (
                 <motion.div
                   key={item.href}

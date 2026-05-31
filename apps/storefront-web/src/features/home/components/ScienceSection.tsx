@@ -108,7 +108,7 @@ export default function ScienceSection() {
             }}
           />
 
-          <motion.div style={{ y: yFeatures, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2rem", marginTop: "3rem" }}>
+          <motion.div style={{ y: yFeatures }} className="science-features-grid">
             {[
               {
                 title: "Thermoregulasi",
@@ -140,11 +140,10 @@ export default function ScienceSection() {
 
       {/* Infinite Looping Carousel */}
       <motion.div
+        className="science-marquee-container"
         style={{
           y: yMarquee,
-          marginTop: "8rem",
           width: "100%",
-          padding: "4rem 0",
           position: "relative",
           zIndex: 5,
         }}

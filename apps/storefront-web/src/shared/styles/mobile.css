@@ -1,8 +1,12 @@
 /* ================================================================
-   NOVARIUM — MOBILE LAYOUT (FULL REDESIGN)
-   Strategy: Complete UI redesign for mobile, not just resizing.
-   Breakpoints: 768px tablet, 480px phone
+   NOVARIUM — MOBILE LAYOUT
    ================================================================ */
+
+/* ── Global overflow guard ── */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
 
 /* ── Hamburger / Mobile Menu ── */
 .mobile-menu-overlay {
@@ -19,13 +23,11 @@
   pointer-events: none;
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 .mobile-menu-overlay.open {
   display: flex;
   opacity: 1;
   pointer-events: all;
 }
-
 .mobile-menu-link {
   font-size: clamp(2.8rem, 10vw, 4rem);
   font-weight: 800;
@@ -36,11 +38,7 @@
   transition: opacity 0.2s ease;
   display: block;
 }
-
-.mobile-menu-link:hover {
-  opacity: 0.4;
-}
-
+.mobile-menu-link:hover { opacity: 0.4; }
 .mobile-menu-bottom {
   position: absolute;
   bottom: 2.5rem;
@@ -51,7 +49,6 @@
   align-items: center;
   padding: 0 2rem;
 }
-
 .mobile-menu-bottom-label {
   font-size: 0.65rem;
   font-weight: 600;
@@ -60,6 +57,7 @@
   color: rgba(0, 0, 0, 0.25);
 }
 
+/* ── Hamburger button ── */
 .hamburger-btn {
   display: none;
   background: none;
@@ -73,7 +71,6 @@
   justify-content: center;
   gap: 5px;
 }
-
 .hamburger-btn .bar {
   display: block;
   width: 22px;
@@ -82,21 +79,11 @@
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: center;
 }
+.hamburger-btn.open .bar:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger-btn.open .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger-btn.open .bar:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-.hamburger-btn.open .bar:nth-child(1) {
-  transform: translateY(6.5px) rotate(45deg);
-}
-.hamburger-btn.open .bar:nth-child(2) {
-  opacity: 0;
-  transform: scaleX(0);
-}
-.hamburger-btn.open .bar:nth-child(3) {
-  transform: translateY(-6.5px) rotate(-45deg);
-}
-
-/* ================================================================
-   FOOTER — DESKTOP FIX (applies always)
-   ================================================================ */
+/* ── Footer (desktop fix, always applied) ── */
 .site-footer {
   width: 100%;
   background: #0a0a0a;
@@ -105,7 +92,6 @@
   font-size: 0.8rem;
   box-sizing: border-box;
 }
-
 .footer-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
@@ -114,7 +100,6 @@
   margin: 0 auto 3.5rem;
   text-align: left;
 }
-
 .footer-divider {
   width: 100%;
   max-width: 1100px;
@@ -122,7 +107,6 @@
   background: rgba(255, 255, 255, 0.08);
   margin: 0 auto 2rem;
 }
-
 .footer-bottom {
   max-width: 1100px;
   margin: 0 auto;
@@ -131,44 +115,38 @@
   color: rgba(255, 255, 255, 0.25);
 }
 
+/* ── Mobile discover wrapper: hidden on desktop ── */
+.discover-mobile-wrapper { display: none; }
+
 /* ================================================================
-   @media (max-width: 768px) — Tablet & Mobile
+   @media (max-width: 768px)
    ================================================================ */
 @media (max-width: 768px) {
 
   /* ── Navbar ── */
-  .hamburger-btn {
-    display: flex;
-  }
+  .hamburger-btn { display: flex; }
+  .nav-links-hidden-mobile { display: none !important; }
 
-  .nav-links-hidden-mobile {
-    display: none !important;
-  }
-
-  /* ── Hero Section ── */
+  /* ── Hero ── */
   .hero-section {
     min-height: 100svh;
     min-height: 100vh;
     justify-content: flex-start;
     overflow: hidden;
   }
-
-  /* Hide "move kursor" on mobile — no cursor on touch */
-  .hero-cursor-hint {
-    display: none !important;
-  }
-
+  .hero-cursor-hint { display: none !important; }
   .hero-title-block {
     position: absolute !important;
-    bottom: 12% !important;
-    top: auto !important;
+    top: 0 !important;
+    bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
+    height: 100% !important;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
   }
-
   .hero-title {
     font-size: clamp(4.5rem, 22vw, 7rem);
     line-height: 0.9;
@@ -176,37 +154,85 @@
     text-align: center;
     letter-spacing: -0.06em;
   }
-
   .hero-corner-label { font-size: 0.6rem; letter-spacing: 0.05em; }
-  .hero-corner-label.top-left { top: 1.2rem; left: 1.2rem; }
-  .hero-corner-label.top-right { top: 1.2rem; right: 1.2rem; }
+  .hero-corner-label.top-left    { top: 1.2rem; left: 1.2rem; }
+  .hero-corner-label.top-right   { top: 1.2rem; right: 1.2rem; }
   .hero-corner-label.bottom-left { bottom: 1.2rem; left: 1.2rem; }
-  .hero-corner-label.bottom-right { bottom: 1.2rem; right: 1.2rem; }
+  .hero-corner-label.bottom-right{ bottom: 1.2rem; right: 1.2rem; }
 
-  /* ── Essentialized Section ── */
+  /* ════════════════════════════════════════════════════
+     ESSENTIALIZED — full mobile rework
+     Fix: titles were absolutely positioned (inline via
+     Framer Motion) and overflowed out of the card.
+     Solution: override position to static, hide the
+     duplicate "inner" title, and stack content normally.
+     ════════════════════════════════════════════════════ */
   .essentialized-section {
     min-height: auto;
-    padding-bottom: 3rem;
+    padding-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  /* ════════════════════════════════════════════════════
+     SCIENCE SECTION (MARQUEE)
+     ════════════════════════════════════════════════════ */
+  .science-marquee-container {
+    margin-top: 2rem !important;
+    padding: 1rem 0 !important;
+  }
+  
+  .marquee-item {
+    width: 30vw !important; /* Fits ~3 items (30*3 = 90vw) plus gaps */
+    height: 180px !important;
+  }
+  
+  .marquee-track {
+    gap: 1rem !important;
+  }
+  
+  .science-features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  /* Override Framer Motion inline position: absolute */
+  .essentialized-title-wrapper {
+    position: static !important;
+    transform: none !important;
+    /* Framer-motion y transform still animates but won't clip */
+  }
+
+  /* Hide the duplicate shadow title inside the wave card */
+  .essentialized-inner-title-wrapper {
+    display: none !important;
+  }
+
+  .essentialized-container {
+    padding-top: 1.5rem !important;
+    padding-bottom: 0 !important;
   }
 
   .essentialized-title {
-    font-size: clamp(3rem, 16vw, 6rem);
+    font-size: clamp(2.5rem, 13vw, 5rem);
     white-space: nowrap;
     overflow: hidden;
     padding: 0 0.5rem;
   }
 
+  /* Wave card: normal flow, full-width, capped height */
   .wave-image-container {
     width: 92%;
     height: auto;
-    min-height: 380px;
+    min-height: 340px;
+    max-height: 80vw;
     border-radius: 1.5rem;
-    margin: 0 auto;
+    margin: 1rem auto 0 !important;
     position: relative !important;
-    margin-top: 0 !important;
+    overflow: hidden;
   }
 
-  /* Essentialized carousel — 2-col grid */
+  /* Clothing cards inside wave */
   .essentialized-mobile-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
@@ -214,151 +240,225 @@
     width: 100% !important;
     padding: 1rem !important;
   }
-
   .floating-product-card {
     width: 100% !important;
-    height: 190px !important;
-    padding: 0.9rem !important;
+    height: 130px !important;
+    padding: 0.6rem !important;
+    border-radius: 1rem !important;
+  }
+  .floating-product-card .card-label {
+    font-size: 0.75rem !important;
+  }
+  .floating-product-card .card-image { height: 75px !important; margin: 0.2rem 0 !important; }
+
+  .buy-now-btn {
+    padding: 0.6rem 1.2rem !important;
+    font-size: 0.75rem !important;
+  }
+  .buy-now-btn .arrow-circle {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .buy-now-btn .arrow-circle svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  
+  .carousel-controls-wrapper {
+    gap: 0.5rem !important;
+  }
+  .carousel-arrow-btn {
+    width: 40px !important;
+    height: 40px !important;
   }
 
-  .floating-product-card .card-image {
-    height: 120px !important;
-  }
-
-  /* ── Discover Section ── */
+  /* ════════════════════════════════════════════════════
+     DISCOVER — 2-col 2-row paged mobile grid
+     ════════════════════════════════════════════════════ */
   .discover-section {
     padding: 3rem 1.2rem 4rem;
     min-height: auto;
-    overflow: visible;
+    overflow: hidden;
   }
-
   .discover-content {
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
   }
-
   .discover-left {
     position: static;
     flex: none;
   }
-
   .discover-left h3 {
     font-size: clamp(2.5rem, 10vw, 3.5rem);
     margin-bottom: 1rem;
   }
 
-  /* Hide desktop horizontal slider */
-  .discover-right-container {
-    display: none !important;
+  /* Hide desktop slider on mobile */
+  .discover-right-container { display: none !important; }
+  .slider-controls           { display: none !important; }
+
+  /* Show mobile wrapper */
+  .discover-mobile-wrapper {
+    display: block;
+    width: 100%;
+    overflow: hidden;
   }
 
-  /* Hide slider prev/next controls */
-  .slider-controls {
-    display: none !important;
-  }
-
-  /* Mobile carousel — horizontal scroll, 3 cards visible */
+  /* 2-column grid (2 rows = 4 cards per page) */
   .discover-mobile-grid {
-    display: flex !important;
-    flex-direction: row;
-    gap: 0.75rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 1rem;
-    padding-right: 1.2rem; /* show peek of next card */
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    overflow: hidden;
   }
 
-  .discover-mobile-grid::-webkit-scrollbar {
-    display: none;
-  }
-
+  /* Product card sizing inside mobile grid */
   .discover-mobile-grid .product-card {
-    /* Show ~3 cards: width = (100vw - padding - gaps) / 3 */
-    flex: 0 0 calc(33.33vw - 1rem);
+    flex: none;
+    width: 100% !important;
     min-width: 0;
-    scroll-snap-align: start;
-    width: auto !important;
   }
-
   .discover-mobile-grid .product-card-image {
-    border-radius: 0.8rem;
+    border-radius: 1rem;
     aspect-ratio: 3/4;
+    overflow: hidden;
+    background: #f0f0ef;
   }
-
+  .discover-mobile-grid .product-card-image img {
+    object-fit: contain !important;
+    object-position: center !important;
+  }
   .discover-mobile-grid .product-card-name {
-    font-size: 0.65rem;
+    font-size: 0.78rem;
     font-weight: 700;
     max-width: 100%;
-    margin-bottom: 0.1rem;
     line-height: 1.2;
   }
-
-  .discover-mobile-grid .product-card-sizes {
-    font-size: 0.55rem;
-  }
-
-  .discover-mobile-grid .product-card-stars {
-    display: none; /* too small on 3-col */
-  }
-
   .discover-mobile-grid .product-card-price {
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     font-weight: 800;
   }
+  .discover-mobile-grid .product-card-sizes { font-size: 0.62rem; }
+  .discover-mobile-grid .product-card-stars { display: none; }
+  .discover-mobile-grid .product-card-info  { padding: 0.5rem 0.2rem; }
 
-  .discover-mobile-grid .product-card-info {
-    padding: 0.4rem 0.2rem;
+  /* Nav row below the grid */
+  .discover-mobile-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem 0 0.5rem;
+  }
+  .discover-mobile-nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid #e0e0de;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #111;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
+  }
+  .discover-mobile-nav-btn:active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+  .discover-mobile-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .discover-mobile-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ccc;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .discover-mobile-dot.active {
+    background: #111;
+    width: 18px;
+    border-radius: 3px;
   }
 
-  /* ── Style Outlook Section ── */
-  /* Remap header row to vertical stack */
+  /* ════════════════════════════════════════════════════
+     STYLE OUTLOOK — fix overlapping on mobile
+     The Framer Motion y-parallax on bento columns
+     pushes them out of bounds. We neutralise transforms
+     and stack everything vertically with fixed heights.
+     ════════════════════════════════════════════════════ */
+  .style-outlook-section {
+    overflow: hidden !important;
+    padding: 3rem 1.2rem 2rem !important;
+  }
+
+  /* Disable parallax transforms set by Framer Motion */
+  .bento-col-left,
+  .bento-col-right {
+    transform: none !important;
+    /* Framer Motion uses CSS var --motion-translateY; resetting
+       transform cancels any overflow-causing shift */
+    will-change: auto !important;
+  }
+
+  /* Stack header vertically */
   .style-outlook-header-row {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 1rem !important;
-    margin-bottom: 2rem !important;
+    gap: 0.8rem !important;
+    margin-bottom: 1.5rem !important;
   }
-
+  .style-outlook-header-row > div { flex: none !important; }
   .style-outlook-header-row > div:last-child {
     text-align: left !important;
+    justify-content: flex-start !important;
   }
-
   .style-outlook-header-row p {
     text-align: left !important;
     max-width: 100% !important;
   }
-
-  /* Bento grid — single column, fixed heights */
-  .bento-grid-container {
-    grid-template-columns: 1fr;
-    height: auto;
-    gap: 1rem;
-    margin-bottom: 2rem;
+  .style-outlook-header-row h2 {
+    font-size: clamp(2rem, 8vw, 3.5rem) !important;
   }
 
+  /* Bento grid: single column, fixed heights */
+  .bento-grid-container {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
   .bento-col-left {
     height: 56vw;
-    min-height: 220px;
+    min-height: 200px;
+    max-height: 260px;
   }
-
   .bento-col-right {
     height: auto;
     gap: 1rem;
   }
-
   .bento-item {
     height: 44vw;
-    min-height: 170px;
+    min-height: 160px;
+    max-height: 220px;
   }
-
   .bento-card {
     height: 100%;
+    overflow: hidden;
   }
 
-  /* Pill nav — horizontal scroll, not wrap */
+  /* Pill nav: horizontal scroll */
   .pill-nav-container {
     flex-wrap: nowrap !important;
     overflow-x: auto;
@@ -369,11 +469,7 @@
     scrollbar-width: none;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
-
-  .pill-nav-container::-webkit-scrollbar {
-    display: none;
-  }
-
+  .pill-nav-container::-webkit-scrollbar { display: none; }
   .pill-btn {
     flex-shrink: 0;
     padding: 0.5rem 1.4rem;
@@ -381,15 +477,7 @@
     white-space: nowrap;
   }
 
-  /* ── Product Card (global) — enforce consistent image ratio ── */
-  .product-card-image,
-  .discover-mobile-grid .product-card-image {
-    aspect-ratio: 3/4;
-    overflow: hidden;
-    background: #f0f0ef;
-  }
-
-  /* Fix object-fit on all product card images to contain within ratio */
+  /* ── Product card images — global ── */
   .product-card-image img {
     object-fit: contain !important;
     object-position: center !important;
@@ -400,7 +488,6 @@
     flex-direction: column;
     padding: 1.2rem 1rem 5rem;
   }
-
   .catalogue-sidebar {
     position: static;
     flex: none;
@@ -409,27 +496,19 @@
     border-bottom: none;
     margin-bottom: 0;
   }
-
   .catalogue-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-
   .catalogue-hero {
     height: 55svh;
     height: 55vh;
     min-height: 260px;
   }
+  .catalogue-hero-title { font-size: clamp(3.5rem, 20vw, 7rem); }
 
-  .catalogue-hero-title {
-    font-size: clamp(3.5rem, 20vw, 7rem);
-  }
-
-  /* ── Product Detail Modal — bottom sheet ── */
-  .modal-backdrop {
-    align-items: flex-end;
-  }
-
+  /* Modal — bottom sheet */
+  .modal-backdrop { align-items: flex-end; }
   .modal-sheet {
     grid-template-columns: 1fr;
     border-radius: 1.5rem 1.5rem 0 0;
@@ -437,39 +516,22 @@
     max-height: 92vh;
     overflow-y: auto;
   }
-
   .modal-image-col {
     border-radius: 1.5rem 1.5rem 0 0;
     min-height: 52vw;
     max-height: 48vh;
   }
-
-  .modal-detail-col {
-    padding: 1.5rem 1.2rem 3rem;
-  }
-
-  .modal-product-name {
-    font-size: clamp(1.3rem, 6vw, 1.8rem) !important;
-  }
-
-  .modal-add-btn {
-    width: 100%;
-    padding: 1rem 1.5rem;
-  }
+  .modal-detail-col { padding: 1.5rem 1.2rem 3rem; }
+  .modal-product-name { font-size: clamp(1.3rem, 6vw, 1.8rem) !important; }
+  .modal-add-btn { width: 100%; padding: 1rem 1.5rem; }
 
   /* ── Footer ── */
-  .site-footer {
-    padding: 3.5rem 1.5rem 2.5rem;
-  }
-
+  .site-footer { padding: 3.5rem 1.5rem 2.5rem; }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 2.5rem 2rem;
   }
-
-  .footer-grid > *:first-child {
-    grid-column: 1 / -1;
-  }
+  .footer-grid > *:first-child { grid-column: 1 / -1; }
 
   /* ── Cart ── */
   .cart-page { padding-top: 80px; }
@@ -479,30 +541,37 @@
   .cart-header { flex-direction: column; gap: 0.3rem; }
 
   /* ── Profile ── */
-  .profile-hero {
-    padding: 6rem 1.2rem 3rem;
-  }
-
-  .profile-dashboard {
-    flex-direction: column;
-    padding: 2rem 1.2rem;
-    gap: 1.5rem;
-  }
-
+  .profile-hero { padding: 4rem 1.2rem 2rem; }
+  .profile-dashboard { flex-direction: column; padding: 1.5rem 1.2rem; gap: 1.5rem; }
+  
   .profile-sidebar {
     position: static;
     flex: none;
-  }
-
-  .profile-sidebar-nav {
+    display: flex;
     flex-direction: row;
     overflow-x: auto;
-    padding-bottom: 0.8rem;
+    gap: 0.6rem;
+    padding-bottom: 1rem;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    margin-bottom: 1rem;
   }
-
-  .profile-sidebar-nav::-webkit-scrollbar { display: none; }
+  .profile-sidebar::-webkit-scrollbar { display: none; }
+  
+  .profile-section-title { display: none; }
+  
+  .profile-sidebar-nav {
+    display: contents;
+  }
+  
+  /* Make the logout button wrap div behave like contents or hide it and put it elsewhere. Let's just make it a flex item. */
+  .profile-sidebar > div.mt-12 {
+    margin-top: 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
   .profile-tab { white-space: nowrap; }
   .profile-info-grid { grid-template-columns: 1fr; }
   .profile-order-card { flex-direction: column; align-items: flex-start; }
@@ -521,45 +590,15 @@
 }
 
 /* ================================================================
-   @media (max-width: 480px) — Small Phones
+   @media (max-width: 480px) — Small phones
    ================================================================ */
 @media (max-width: 480px) {
-
-  .catalogue-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.7rem;
-  }
-
-  .hero-title {
-    font-size: clamp(3.8rem, 23vw, 5.5rem);
-  }
-
-  .essentialized-title {
-    font-size: clamp(2.5rem, 18vw, 5rem);
-  }
-
-  /* On very small screens, ensure 3 cards are visible as requested */
-  .discover-mobile-grid .product-card {
-    flex: 0 0 calc(33.33vw - 0.8rem);
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-grid > *:first-child {
-    grid-column: auto;
-  }
-
-  .bento-col-left {
-    height: 65vw;
-  }
-
-  .bento-item {
-    height: 52vw;
-  }
-
-  .profile-name {
-    font-size: clamp(2rem, 12vw, 3rem);
-  }
+  .catalogue-grid { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .hero-title { font-size: clamp(3.8rem, 23vw, 5.5rem); }
+  .essentialized-title { font-size: clamp(2rem, 15vw, 4rem); }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-grid > *:first-child { grid-column: auto; }
+  .bento-col-left { height: 65vw; max-height: 280px; }
+  .bento-item { height: 52vw; max-height: 230px; }
+  .profile-name { font-size: clamp(2rem, 12vw, 3rem); }
 }
