@@ -22,9 +22,14 @@ export const actions = {
 
             const data = await res.json().catch(() => ({}));
 
-            if (res.ok) {
+            if (res.ok && data.success) {
+                const token = data.data?.token;
+                if (!token) {
+                    console.error('[LoginAction] No token in response:', data);
+                    return fail(500, { error: 'Login succeeded but no token received' });
+                }
                 console.log(`[LoginAction] Success for ${email}`);
-                cookies.set('novarium_jwt', data.token, {
+                cookies.set('novarium_jwt', token, {
                     path: '/',
                     httpOnly: true,
                     secure: false,

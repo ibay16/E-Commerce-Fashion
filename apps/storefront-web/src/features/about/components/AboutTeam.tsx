@@ -26,7 +26,7 @@ export default function AboutTeam() {
           Tim Kreatif Kami
         </h2>
         <p style={{ marginTop: "1.5rem", color: "#888", fontSize: "1.1rem", fontWeight: 400 }}>
-          Bertemu dengan orang-orang di balik Novarium.
+          Kenali orang-orang di balik Novarium.
         </p>
       </div>
 

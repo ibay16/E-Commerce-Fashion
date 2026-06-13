@@ -24,12 +24,12 @@ export default function AboutCTA() {
             textShadow: "0 10px 30px rgba(0,0,0,0.1)"
           }}
         >
-          Bangun Essential Lo Sendiri.
+          Wujudkan Wardrobe Ideal Anda.
         </motion.h2>
         
         <p className={styles.aboutCtaDescription}>
-          Gabung sama komunitas yang lebih milih kualitas daripada kuantitas. 
-          Wardrobe perfect lo mulai dari sini.
+          Bergabunglah dengan komunitas yang mengutamakan kualitas di atas segalanya.
+          Wardrobe sempurna Anda dimulai dari sini.
         </p>
 
         <MotionLink

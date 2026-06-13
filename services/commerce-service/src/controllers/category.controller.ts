@@ -9,12 +9,12 @@ export class CategoryController {
     try { res.json(await CategoryService.createCategory(req.body)); } catch(e) { next(e); }
   }
   static async getCategoryById(req: Request, res: Response, next: NextFunction) {
-    try { res.json(await CategoryService.getCategoryById(req.params.id)); } catch(e) { next(e); }
+    try { res.json(await CategoryService.getCategoryById(req.params.id as string)); } catch(e) { next(e); }
   }
   static async updateCategory(req: Request, res: Response, next: NextFunction) {
-    try { res.json(await CategoryService.updateCategory(req.params.id, req.body)); } catch(e) { next(e); }
+    try { res.json(await CategoryService.updateCategory(req.params.id as string, req.body)); } catch(e) { next(e); }
   }
   static async deleteCategory(req: Request, res: Response, next: NextFunction) {
-    try { res.json(await CategoryService.deleteCategory(req.params.id)); } catch(e) { next(e); }
+    try { res.json(await CategoryService.deleteCategory(req.params.id as string)); } catch(e) { next(e); }
   }
 }

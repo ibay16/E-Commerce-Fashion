@@ -16,38 +16,38 @@ export interface CompanyValue {
 
 export const TEAM: TeamMember[] = [
   {
-    name: "Fifin Agustiana",
-    role: "Creative Director & Co-Founder",
-    bio: "Seorang visioner di dunia modern fashion aesthetics, Fifin punya mata tajam buat minimalist elegance dan textile innovation yang jadi ciri khas setiap piece Novarium.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face",
-    accent: "#9b51e0",
-  },
-  {
     name: "I Gede Bayu Pamungkas",
-    role: "Chief Executive Officer",
-    bio: "Dengan strategic mindset dan passion buat ngeguncang fast fashion, Bayu mendorong misi Novarium biar premium essentials bisa diakses semua orang.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    role: "Frontend Developer",
+    bio: "Bayu membangun tampilan Novarium dari nol — dari arsitektur komponen Next.js hingga animasi micro-interaction yang membuat pengalaman belanja terasa premium dan mulus.",
+    avatar: "https://ghdadhlyhzdkrjlurifj.supabase.co/storage/v1/object/public/Developer/Bayu.jpeg",
     accent: "#9cad8f",
   },
   {
-    name: "Zilal Afwu Rahman",
-    role: "Head of Product Design",
-    bio: "Zilal adalah arsitek di balik signature silhouettes Novarium. Setiap potongan, jahitan, dan jatuhnya kain dirancang dengan sangat detail di bawah design philosophy-nya.",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
-    accent: "#27ae60",
+    name: "Fifin Agustiana",
+    role: "UI/UX Designer",
+    bio: "Fifin adalah otak di balik identitas visual Novarium. Dengan pendekatan user-centered design, setiap pixel dirancang untuk menciptakan estetika yang intuitif dan elegan.",
+    avatar: "https://ghdadhlyhzdkrjlurifj.supabase.co/storage/v1/object/public/Developer/Fifin.png",
+    accent: "#9b51e0",
   },
   {
     name: "Safdar Rahman",
-    role: "Chief Technology Officer",
-    bio: "Safdar nyambungin antara fashion dan teknologi, membangun digital infrastructure yang ngepowerin e-commerce experience Novarium yang seamless.",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    role: "Backend Developer",
+    bio: "Rahman membangun fondasi teknis Novarium — dari arsitektur microservices, integrasi payment gateway Midtrans, hingga sistem manajemen pesanan yang andal.",
+    avatar: "https://ghdadhlyhzdkrjlurifj.supabase.co/storage/v1/object/public/Developer/Rahman.png",
     accent: "#e05177",
+  },
+  {
+    name: "Zilal Afwu Rahman",
+    role: "DevOps Engineer",
+    bio: "Zilal memastikan Novarium selalu online dan scalable — mengelola containerisasi Docker, pipeline deployment, dan infrastruktur yang menjaga layanan tetap stabil.",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
+    accent: "#27ae60",
   },
 ];
 
 export const VALUES: CompanyValue[] = [
-  { icon: "✦", title: "Craftsmanship", desc: "Setiap piece dibikin dengan presisi — dari benang pertama sampai press terakhir." },
-  { icon: "◆", title: "Sustainability", desc: "Produksi yang conscious ketemu modern design, dibuat buat tahan lebih dari satu season." },
-  { icon: "●", title: "Inovasi", desc: "Kita push boundaries di fabric technology, fit science, dan cara lo belanja." },
-  { icon: "▲", title: "Komunitas", desc: "Novarium bukan cuma brand — ini culture dari orang-orang yang nolak jadi biasa aja." },
+  { icon: "✦", title: "Craftsmanship", desc: "Setiap produk dibuat dengan presisi tinggi — dari pemilihan benang pertama hingga proses finishing terakhir." },
+  { icon: "◆", title: "Sustainability", desc: "Produksi yang bertanggung jawab bertemu dengan desain modern, dirancang untuk bertahan lebih dari satu musim." },
+  { icon: "●", title: "Inovasi", desc: "Kami terus mendorong batas dalam teknologi kain, ilmu pencocokan ukuran, dan pengalaman berbelanja." },
+  { icon: "▲", title: "Komunitas", desc: "Novarium bukan sekadar merek — ini adalah budaya dari mereka yang menolak untuk menjadi biasa." },
 ];

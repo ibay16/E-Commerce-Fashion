@@ -24,10 +24,10 @@ export default function EssentializedSection() {
     async function loadData() {
       const teesData = await getTees();
       const jeansData = await getJeans();
-      
+
       setTees(teesData);
       setJeans(jeansData);
-      
+
       if (teesData.length > 0) setCurrentTee(teesData[0]);
       if (jeansData.length > 0) setCurrentJeans(jeansData[0]);
     }
@@ -84,92 +84,92 @@ export default function EssentializedSection() {
     <section ref={containerRef} className="essentialized-section">
       {!currentTee || !currentJeans ? (
         <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-           <p style={{ opacity: 0.5 }}>Lagi Loading Essentials...</p>
+          <p style={{ opacity: 0.5 }}>Loading Essentials...</p>
         </div>
       ) : (
         <>
 
 
-      <div className="essentialized-container" style={{ position: "relative", width: "100%", paddingBottom: "5vw" }}>
-        <motion.div className="essentialized-title-wrapper" ref={titleRef} style={{ y: yTitle, position: "absolute", top: "2vw", left: 0, right: 0, zIndex: 6 }}>
-          <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
-            <h2
-              className="essentialized-title"
-              style={{
-                position: "relative",
-                zIndex: 2,
-                backgroundImage: `linear-gradient(90deg, ${currentTee.colors?.[0] || "#111"}, ${currentJeans.colors?.[0] || "#111"})`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                color: "transparent",
-                opacity: 0.9,
-              }}
-            >
-              {letters.map((letter, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ y: 200, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 1, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ display: "inline-block" }}
+          <div style={{ position: "relative", width: "100%", paddingBottom: "5vw" }}>
+            <motion.div ref={titleRef} style={{ y: yTitle, position: "absolute", top: "2vw", left: 0, right: 0, zIndex: 6 }}>
+              <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
+                <h2
+                  className="essentialized-title"
+                  style={{
+                    position: "relative",
+                    zIndex: 2,
+                    backgroundImage: `linear-gradient(90deg, ${currentTee.colors?.[0] || "#111"}, ${currentJeans.colors?.[0] || "#111"})`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "transparent",
+                    opacity: 0.9,
+                  }}
                 >
-                  {letter}
-                </motion.span>
-              ))}
-            </h2>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          className="wave-image-container"
-          style={{ y: yWave, position: "relative", zIndex: 2, marginTop: "10vw" }}
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <motion.div className="essentialized-inner-title-wrapper" style={{ y: yInnerTitle, position: "absolute", top: "-8vw", left: 0, right: 0, zIndex: 1 }}>
-            <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
-              <h2
-                className="essentialized-title"
-                style={{
-                  position: "relative",
-                  zIndex: 2,
-                  backgroundImage: `linear-gradient(90deg, color-mix(in srgb, ${currentTee.colors?.[0] || "#111"} 35%, white), color-mix(in srgb, ${currentJeans.colors?.[0] || "#111"} 35%, white))`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  color: "transparent",
-                  opacity: 0.95,
-                }}
-              >
-                {letters.map((letter, i) => (
-                  <motion.span
-                    key={`inner-${i}`}
-                    initial={{ y: 200, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 1, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                    style={{ display: "inline-block" }}
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </h2>
+                  {letters.map((letter, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ y: 200, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 1, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                      style={{ display: "inline-block" }}
+                    >
+                      {letter}
+                    </motion.span>
+                  ))}
+                </h2>
+              </motion.div>
             </motion.div>
-          </motion.div>
 
-          <AnimatedWave />
+            <motion.div
+              className="wave-image-container"
+              style={{ y: yWave, position: "relative", zIndex: 2, marginTop: "10vw" }}
+              initial={{ opacity: 0, y: 80 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <motion.div style={{ y: yInnerTitle, position: "absolute", top: "-8vw", left: 0, right: 0, zIndex: 1 }}>
+                <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
+                  <h2
+                    className="essentialized-title"
+                    style={{
+                      position: "relative",
+                      zIndex: 2,
+                      backgroundImage: `linear-gradient(90deg, color-mix(in srgb, ${currentTee.colors?.[0] || "#111"} 35%, white), color-mix(in srgb, ${currentJeans.colors?.[0] || "#111"} 35%, white))`,
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      color: "transparent",
+                      opacity: 0.95,
+                    }}
+                  >
+                    {letters.map((letter, i) => (
+                      <motion.span
+                        key={`inner-${i}`}
+                        initial={{ y: 200, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 1, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ display: "inline-block" }}
+                      >
+                        {letter}
+                      </motion.span>
+                    ))}
+                  </h2>
+                </motion.div>
+              </motion.div>
 
-          <ClothingCarousel
-            currentTee={currentTee}
-            currentJeans={currentJeans}
-            comboKey={comboKey}
-            onNext={handleNextCombo}
-            onPrev={handlePrevCombo}
-            yCards={yCards}
-          />
-        </motion.div>
-      </div>
-      </>
+              <AnimatedWave />
+
+              <ClothingCarousel
+                currentTee={currentTee}
+                currentJeans={currentJeans}
+                comboKey={comboKey}
+                onNext={handleNextCombo}
+                onPrev={handlePrevCombo}
+                yCards={yCards}
+              />
+            </motion.div>
+          </div>
+        </>
       )}
     </section>
   );

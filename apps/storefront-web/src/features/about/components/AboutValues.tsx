@@ -46,7 +46,7 @@ export default function AboutValues() {
                 marginTop: "1.5rem"
               }}
             >
-              Apa yang<br />Men-Define Kita
+              Apa yang<br />Mendefinisikan Kami
             </motion.h2>
           </div>
 
@@ -56,10 +56,7 @@ export default function AboutValues() {
             transition={{ duration: 0.8, delay: 0.2 }}
             style={{ flex: 1, textAlign: "right" }}
           >
-            <p style={{ maxWidth: "350px", marginLeft: "auto", fontSize: "1rem", lineHeight: 1.6, color: "rgba(255,255,255,0.5)", fontWeight: 300 }}>
-              Di Novarium, kita percaya produk terbaik lahir dari keseimbangan
-              antara heritage, etika, dan modern engineering.
-            </p>
+            <p style={{ maxWidth: "350px", marginLeft: "auto", fontSize: "1rem", lineHeight: 1.6, color: "rgba(255,255,255,0.5)", fontWeight: 300 }}>Di Novarium, kami percaya produk terbaik lahir dari keseimbangan antara warisan, etika, dan rekayasa modern.</p>
           </motion.div>
         </div>
 
@@ -125,7 +122,7 @@ export default function AboutValues() {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
             style={{
-              gridColumn: "span 4",
+              gridColumn: "span 6",
               gridRow: "span 1",
               background: "rgba(255,255,255,0.02)",
               border: "1px solid rgba(255,255,255,0.06)",
@@ -148,7 +145,7 @@ export default function AboutValues() {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
             style={{
-              gridColumn: "span 4",
+              gridColumn: "span 6",
               gridRow: "span 1",
               background: "rgba(255,255,255,0.02)",
               border: "1px solid rgba(255,255,255,0.06)",

@@ -21,10 +21,14 @@ export default function Navbar({ isInline = false }: NavbarProps) {
 
   const isHome = pathname === "/";
   const isProfile = pathname === "/profile";
+  const isAbout = pathname === "/about";
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (isProfile) {
       setScrolled(latest > 350);
+    } else if (isAbout) {
+      // Hero is 100vh, switch to solid after ~80vh
+      setScrolled(latest > window.innerHeight * 0.8);
     } else {
       setScrolled(latest > 50);
     }
@@ -45,23 +49,25 @@ export default function Navbar({ isInline = false }: NavbarProps) {
   // The home page will render its own <Navbar isInline /> below the Hero.
   if (!isInline && isHome) return null;
 
-  const baseClass = isInline ? styles.navbarSticky : (isProfile ? styles.navbarAbsolute : styles.navbar);
+  const hasDarkHero = isProfile || isAbout;
+  const baseClass = isInline ? styles.navbarSticky : (hasDarkHero ? styles.navbarAbsolute : styles.navbar);
   const navbarClassName = [
     baseClass,
     scrolled ? styles.navbarScrolled : "",
-    !scrolled && !isInline && isProfile ? styles.navbarTransparent : styles.navbarDefault,
+    !scrolled && !isInline && hasDarkHero ? styles.navbarTransparent : styles.navbarDefault,
   ]
     .filter(Boolean)
     .join(" ");
 
+  const isLightText = !scrolled && !isInline && hasDarkHero;
   const mainNavbarClassName = [
     styles.mainNavbar,
-    scrolled || isInline || !isProfile ? styles.mainNavbarDark : styles.mainNavbarLight,
+    isLightText ? styles.mainNavbarLight : styles.mainNavbarDark,
   ]
     .filter(Boolean)
     .join(" ");
 
-  const isDark = scrolled || isInline || !isProfile;
+  const isDark = !isLightText;
 
   return (
     <>

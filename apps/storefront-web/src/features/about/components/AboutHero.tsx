@@ -87,7 +87,7 @@ export default function AboutHero({ scrollYProgress }: AboutHeroProps) {
             padding: "0.5rem 1.2rem",
             borderRadius: "2rem"
           }}>
-            Heritage & Visi Kita
+            Heritage & Visi Kami
           </span>
         </motion.div>
 
@@ -104,7 +104,7 @@ export default function AboutHero({ scrollYProgress }: AboutHeroProps) {
             color: "#fff",
           }}
         >
-          Essence Dari<br />
+          Esensi dari<br />
           <span style={{
             background: "linear-gradient(to right, #fff, rgba(255,255,255,0.5))",
             WebkitBackgroundClip: "text",
@@ -128,8 +128,8 @@ export default function AboutHero({ scrollYProgress }: AboutHeroProps) {
             letterSpacing: "0.01em"
           }}
         >
-          Lahir dari satu visi untuk me-redefine modern wardrobe.
-          Kita membuat essentials yang timeless, dengan kenyamanan
+          Lahir dari satu visi untuk mendefinisikan kembali modern wardrobe.
+          Kami menghadirkan essentials yang timeless, dengan kenyamanan
           di setiap jahitannya.
         </motion.p>
       </motion.div>

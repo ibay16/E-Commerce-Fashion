@@ -18,6 +18,7 @@ export class CheckoutService {
     });
 
     if (!order) throw new Error('Order not found');
+    if (order.status !== 'AWAITING_PAYMENT') throw new Error('Order is not awaiting payment');
 
     const productItems = order.items.map((item: any) => ({
       id: item.productId,
@@ -35,12 +36,36 @@ export class CheckoutService {
 
     const calculatedGrossAmount = itemsForMidtrans.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
+    const customer = await prisma.customer.findUnique({
+      where: { id: userId }
+    });
+
+    let midtransAddress = undefined;
+    if (order.addressSnapshot) {
+      try {
+        const addr = typeof order.addressSnapshot === 'string' ? JSON.parse(order.addressSnapshot) : order.addressSnapshot;
+        midtransAddress = {
+          first_name: addr.recipient || customer?.name || customer_details?.first_name || 'Customer',
+          phone: addr.phone || customer?.phone || '',
+          address: addr.line1 || '',
+          city: addr.city || '',
+          postal_code: addr.postalCode || '',
+          country_code: 'IDN'
+        };
+      } catch (e) {
+        console.error("Failed to parse addressSnapshot", e);
+      }
+    }
+
     const parameter: any = {
       payment_type: payment_type || 'bank_transfer',
       transaction_details: { order_id, gross_amount: calculatedGrossAmount },
       customer_details: {
-        first_name: customer_details?.first_name || 'Customer',
-        email: customer_details?.email || 'customer@example.com',
+        first_name: customer?.name || customer_details?.first_name || 'Customer',
+        email: customer?.email || customer_details?.email || 'customer@example.com',
+        phone: customer?.phone || midtransAddress?.phone || '',
+        billing_address: midtransAddress,
+        shipping_address: midtransAddress,
       },
       item_details: itemsForMidtrans
     };
@@ -55,14 +80,9 @@ export class CheckoutService {
   }
 
   static async handleWebhook(body: any) {
-    const { order_id, transaction_status, status_code, gross_amount, signature_key } = body;
-    const serverKey = process.env.MIDTRANS_SERVER_KEY || '';
-    
-    const hash = crypto.createHash('sha512');
-    hash.update(order_id + status_code + gross_amount + serverKey);
-    const expectedSignature = hash.digest('hex');
-
-    if (expectedSignature !== signature_key) throw new Error('Invalid signature');
+    const statusResponse = await coreApi.transaction.notification(body);
+    const order_id = statusResponse.order_id;
+    const transaction_status = statusResponse.transaction_status;
 
     let orderStatus: any = 'AWAITING_PAYMENT';
     if (['settlement', 'capture'].includes(transaction_status)) {
@@ -72,8 +92,8 @@ export class CheckoutService {
     }
 
     if (orderStatus !== 'AWAITING_PAYMENT') {
-      await prisma.order.update({
-        where: { id: order_id },
+      await prisma.order.updateMany({
+        where: { id: order_id, status: 'AWAITING_PAYMENT' },
         data: { status: orderStatus }
       });
     }
@@ -82,6 +102,26 @@ export class CheckoutService {
   }
 
   static async getMidtransStatus(orderId: string) {
-    return await coreApi.transaction.status(orderId);
+    const statusResponse = await coreApi.transaction.status(orderId);
+    
+    if (statusResponse && statusResponse.transaction_status) {
+      const { transaction_status } = statusResponse;
+      let orderStatus: any = 'AWAITING_PAYMENT';
+      
+      if (['settlement', 'capture'].includes(transaction_status)) {
+        orderStatus = 'PROCESSING';
+      } else if (['expire', 'cancel', 'deny'].includes(transaction_status)) {
+        orderStatus = 'CANCELLED';
+      }
+
+      if (orderStatus !== 'AWAITING_PAYMENT') {
+        await prisma.order.updateMany({
+          where: { id: orderId, status: 'AWAITING_PAYMENT' },
+          data: { status: orderStatus }
+        });
+      }
+    }
+    
+    return statusResponse;
   }
 }

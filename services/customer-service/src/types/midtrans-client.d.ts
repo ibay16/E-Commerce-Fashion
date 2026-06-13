@@ -11,6 +11,7 @@ declare module 'midtrans-client' {
       approve(orderId: string): Promise<any>;
       cancel(orderId: string): Promise<any>;
       expire(orderId: string): Promise<any>;
+      notification(body: any): Promise<any>;
     };
   }
 }

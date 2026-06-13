@@ -6,21 +6,22 @@
 .about-story-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8rem;
+  gap: 6rem;
   align-items: center;
 }
 
 .about-story-text-card {
   position: absolute;
   bottom: 3rem;
-  right: -4rem;
-  padding: 2.5rem;
-  width: 320px;
-  background: rgba(255, 255, 255, 0.85);
+  right: -3rem;
+  padding: 2rem 2.5rem;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
-  border-radius: 1rem;
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08);
+  border-radius: 1.25rem;
   z-index: 20;
 }
 
@@ -29,55 +30,91 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 6rem;
+  margin-bottom: 5rem;
+  gap: 2rem;
 }
 
 .about-values-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: minmax(200px, auto);
-  gap: 1.5rem;
+  grid-auto-rows: minmax(220px, auto);
+  gap: 1.25rem;
   position: relative;
 }
 
 /* =========================================
-   MOBILE RESPONSIVE
+   TABLET RESPONSIVE (768px - 1024px)
+   ========================================= */
+@media (max-width: 1024px) {
+  .about-story-grid {
+    gap: 4rem;
+  }
+
+  .about-story-text-card {
+    right: -1rem;
+    width: 260px;
+    padding: 1.5rem 2rem;
+  }
+}
+
+/* =========================================
+   MOBILE RESPONSIVE (<= 768px)
    ========================================= */
 @media (max-width: 768px) {
   /* AboutStory Mobile */
   .about-story-grid {
     grid-template-columns: 1fr;
-    gap: 4rem;
+    gap: 0;
   }
-  
+
   .about-story-text-card {
     position: relative;
     bottom: auto;
     right: auto;
     width: 100%;
-    margin-top: -2rem;
+    margin-top: 1.5rem;
+    border-radius: 1rem;
   }
 
   /* AboutValues Mobile */
   .about-values-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 2rem;
-    margin-bottom: 4rem;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
   }
-  
-  .about-values-header > div {
+
+  .about-values-header > div:last-child {
     text-align: left !important;
   }
-  
+
   .about-values-header p {
     margin-left: 0 !important;
     text-align: left !important;
+    max-width: 100% !important;
   }
 
   .about-values-grid {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+  }
+
+  /* Force values bento items to full width on mobile */
+  .about-values-grid > div {
+    grid-column: span 12 !important;
+    grid-row: span 1 !important;
+  }
+
+  /* Team carousel card: switch to single column on mobile */
+  .team-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    padding: 2rem !important;
+  }
+
+  .team-card-image {
+    aspect-ratio: 1/1 !important;
+    max-height: 280px;
   }
 }

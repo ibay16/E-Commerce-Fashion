@@ -167,7 +167,7 @@ export class AccountService {
     
     const addressSnapshot = address ? JSON.stringify(address) : null;
 
-    return await prisma.order.create({
+    const order = await prisma.order.create({
       data: {
         customerId: userId,
         addressSnapshot,
@@ -185,5 +185,28 @@ export class AccountService {
         }
       }
     });
+
+    // Clear cart items that were purchased
+    if (items && items.length > 0) {
+      const cart = await prisma.cart.findUnique({ where: { customerId: userId } });
+      if (cart) {
+        const variantIds = items.map((i: any) => i.productVariantId || i.variantId).filter(Boolean);
+        if (variantIds.length > 0) {
+           await prisma.cartItem.deleteMany({
+             where: {
+               cartId: cart.id,
+               productVariantId: { in: variantIds }
+             }
+           });
+        } else {
+           // Fallback if variantIds are missing, just clear the whole cart
+           await prisma.cartItem.deleteMany({
+             where: { cartId: cart.id }
+           });
+        }
+      }
+    }
+
+    return order;
   }
 }

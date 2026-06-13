@@ -6,6 +6,6 @@ export class ReviewController {
     try { res.json(await ReviewService.submitReview({ customerId: req.user.id, ...req.body })); } catch(e) { next(e); }
   }
   static async getReviewsByProductId(req: Request, res: Response, next: NextFunction) {
-    try { res.json(await ReviewService.getReviewsByProductId(req.params.id)); } catch(e) { next(e); }
+    try { res.json(await ReviewService.getReviewsByProductId(req.params.id as string)); } catch(e) { next(e); }
   }
 }
