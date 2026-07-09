@@ -35,15 +35,15 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/proxy/commerce/:path*',
-        destination: `${process.env.INTERNAL_COMMERCE_API_URL || 'http://commerce-service:3001/api/commerce'}/:path*`
+        destination: `${process.env.NEXT_PUBLIC_COMMERCE_API_URL || 'http://commerce-service:3001/api/commerce'}/:path*`
       },
       {
         source: '/proxy/customer/:path*',
-        destination: `${process.env.INTERNAL_CUSTOMER_API_URL || 'http://customer-service:3002/api/customer'}/:path*`
+        destination: `${process.env.NEXT_PUBLIC_CUSTOMER_API_URL || 'http://customer-service:3002/api/customer'}/:path*`
       },
       {
         source: '/proxy/orders/:path*',
-        destination: `${process.env.INTERNAL_ORDER_API_URL || 'http://order-service:3003/api/orders'}/:path*`
+        destination: `${process.env.NEXT_PUBLIC_ORDER_API_URL || 'http://order-service:3003/api/orders'}/:path*`
       }
     ]
   }
