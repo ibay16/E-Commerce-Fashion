@@ -31,6 +31,22 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/proxy/commerce/:path*',
+        destination: `${process.env.INTERNAL_COMMERCE_API_URL || 'http://commerce-service:3001/api/commerce'}/:path*`
+      },
+      {
+        source: '/proxy/customer/:path*',
+        destination: `${process.env.INTERNAL_CUSTOMER_API_URL || 'http://customer-service:3002/api/customer'}/:path*`
+      },
+      {
+        source: '/proxy/orders/:path*',
+        destination: `${process.env.INTERNAL_ORDER_API_URL || 'http://order-service:3003/api/orders'}/:path*`
+      }
+    ]
+  }
 };
 
 export default nextConfig;

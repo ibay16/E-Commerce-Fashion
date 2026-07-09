@@ -4,17 +4,17 @@
  */
 
 export const COMMERCE_API_URL = (() => {
-  if (typeof window !== "undefined") return process.env.NEXT_PUBLIC_COMMERCE_API_URL || "http://localhost:3001/api/commerce";
+  if (typeof window !== "undefined") return "/proxy/commerce";
   return process.env.INTERNAL_COMMERCE_API_URL || process.env.NEXT_PUBLIC_COMMERCE_API_URL || "http://commerce-service:3001/api/commerce";
 })();
 
 export const CUSTOMER_API_URL = (() => {
-  if (typeof window !== "undefined") return process.env.NEXT_PUBLIC_CUSTOMER_API_URL || "http://localhost:4002/api/customer";
+  if (typeof window !== "undefined") return "/proxy/customer";
   return process.env.INTERNAL_CUSTOMER_API_URL || process.env.NEXT_PUBLIC_CUSTOMER_API_URL || "http://customer-service:4002/api/customer";
 })();
 
 export const ORDER_API_URL = (() => {
-  if (typeof window !== "undefined") return process.env.NEXT_PUBLIC_ORDER_API_URL || "http://localhost:4003/api/orders";
+  if (typeof window !== "undefined") return "/proxy/orders";
   return process.env.INTERNAL_ORDER_API_URL || process.env.NEXT_PUBLIC_ORDER_API_URL || "http://order-service:4003/api/orders";
 })();
 
