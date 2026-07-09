@@ -20,6 +20,10 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK", service: "commerce-service" });
 });
 
+app.get("/", (req, res) => {
+  res.json({ status: "alive", service: "commerce-service" });
+});
+
 // For storefront BFF
 app.use("/api/commerce/products", productRoutes);
 app.use("/api/commerce/categories", categoryRoutes);

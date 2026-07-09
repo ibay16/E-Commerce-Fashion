@@ -17,6 +17,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', service: 'customer-service' });
 });
 
+app.get("/", (req, res) => {
+  res.json({ status: "alive", service: "customer-service" });
+});
+
 // Routes
 app.use('/api/customer/auth', authRoutes);
 app.use('/api/customer/account', accountRoutes);
