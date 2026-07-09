@@ -19,9 +19,15 @@ export interface CourierOption {
 
 export interface ShippingResponse {
   success: boolean;
-  distance_km: number;
-  couriers: CourierOption[];
-  city: string;
+  data?: {
+    distance_km: number;
+    couriers: CourierOption[];
+    city: string;
+  };
+  // Flat fallback fields for defensive access
+  distance_km?: number;
+  couriers?: CourierOption[];
+  city?: string;
   error?: string;
 }
 

@@ -42,4 +42,15 @@ export class OrderController {
       next(err);
     }
   }
+
+  static async updateAdminOrderStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      const order = await OrderService.updateAdminOrderStatus(id, status);
+      res.json({ success: true, data: order });
+    } catch (err: any) {
+      next(err);
+    }
+  }
 }

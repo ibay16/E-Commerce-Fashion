@@ -98,16 +98,20 @@ export function useCheckout() {
           city: selectedAddress.city,
         });
 
-        if (!payload?.success || !Array.isArray(payload.couriers)) {
+        // Backend returns { success, data: { couriers, distance_km, city } }
+        const shippingData = payload?.data || payload;
+        const courierList = shippingData?.couriers;
+
+        if (!payload?.success || !Array.isArray(courierList)) {
           throw new Error(payload?.error || "Gagal mengambil ongkos kirim");
         }
         if (!active) return;
-        setCouriers(payload.couriers as CourierOption[]);
+        setCouriers(courierList as CourierOption[]);
         setSelectedCourierId((prev) => {
-          if (prev && payload.couriers.some((c: CourierOption) => c.id === prev)) {
+          if (prev && courierList.some((c: CourierOption) => c.id === prev)) {
             return prev;
           }
-          return payload.couriers[0]?.id || "";
+          return courierList[0]?.id || "";
         });
       } catch {
         if (!active) return;

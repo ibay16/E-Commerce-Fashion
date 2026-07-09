@@ -13,6 +13,9 @@ export const env = {
   INTERNAL_SERVICE_KEY: process.env.INTERNAL_SERVICE_KEY || 'novarium-internal-mesh-key-2026',
   COMMERCE_SERVICE_URL: process.env.COMMERCE_SERVICE_URL || 'http://localhost:3001',
   ORDER_SERVICE_URL: process.env.ORDER_SERVICE_URL || 'http://localhost:4003',
+  MIDTRANS_IS_PRODUCTION: process.env.MIDTRANS_IS_PRODUCTION || 'false',
+  MIDTRANS_SERVER_KEY: process.env.MIDTRANS_SERVER_KEY || '',
+  MIDTRANS_CLIENT_KEY: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || '',
   ALLOWED_ORIGINS: [
     process.env.STOREFRONT_URL || 'http://localhost:3000',
     process.env.ADMIN_URL || 'http://localhost:4000',

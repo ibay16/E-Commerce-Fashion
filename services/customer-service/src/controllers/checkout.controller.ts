@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { CheckoutService } from '../services/checkout.service';
-import { AuthRequest } from '../middleware/auth';
+import { CheckoutService } from '../services/checkout.service.js';
+import { AuthRequest } from '@novarium/shared';
 
 export class CheckoutController {
   static async getMidtransStatus(req: Request, res: Response, next: NextFunction) {

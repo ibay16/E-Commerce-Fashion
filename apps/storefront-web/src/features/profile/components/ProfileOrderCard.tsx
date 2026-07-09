@@ -16,7 +16,7 @@ export interface MockOrder {
   details: string; // e.g., "Size: M · Color: Sage Green · Qty: 1"
   imageUrl: string;
   total: string;
-  status: "delivered" | "processing" | "shipped" | "awaiting_payment" | "cancelled" | "AWAITING_PAYMENT" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  status: "delivered" | "processing" | "shipped" | "awaiting_payment" | "cancelled" | "AWAITING_PAYMENT" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "RETURNED" | "REFUNDED";
   productId?: string;
 }
 
@@ -31,6 +31,8 @@ const STATUS_LABELS: Record<MockOrder["status"], string> = {
   SHIPPED: "Dikirim",
   AWAITING_PAYMENT: "Menunggu Pembayaran",
   CANCELLED: "Dibatalkan",
+  RETURNED: "Dikembalikan",
+  REFUNDED: "Dana Dikembalikan",
 };
 
 interface ProfileOrderCardProps {

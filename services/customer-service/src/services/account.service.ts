@@ -1,4 +1,4 @@
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 
 const GATEWAY_URL = process.env.INTERNAL_COMMERCE_API_URL || process.env.COMMERCE_SERVICE_URL || 'http://commerce-service:3001/api/commerce';
 const INTERNAL_KEY = process.env.INTERNAL_SERVICE_KEY;
@@ -28,11 +28,54 @@ export class AccountService {
 
     if (!customer) throw new Error('Pelanggan tidak ditemukan');
 
-    const orders = await prisma.order.findMany({
+    let orders = await prisma.order.findMany({
       where: { customerId: userId },
       orderBy: { createdAt: 'desc' },
       include: { items: true }
     });
+
+    // Auto-sync AWAITING_PAYMENT orders with Midtrans
+    const awaitingOrders = orders.filter((o) => o.status === 'AWAITING_PAYMENT');
+    if (awaitingOrders.length > 0) {
+      const { CheckoutService } = require('./checkout.service');
+      let dbUpdated = false;
+      await Promise.all(
+        awaitingOrders.map(async (order) => {
+          // 1. Auto-expire if order is older than 24 hours locally
+          const orderAgeMs = Date.now() - new Date(order.createdAt).getTime();
+          const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+          if (orderAgeMs > ONE_DAY_MS) {
+            await prisma.order.update({
+              where: { id: order.id },
+              data: { status: 'CANCELLED' }
+            });
+            dbUpdated = true;
+            return; // Skip Midtrans check
+          }
+
+          // 2. Check Midtrans status for newer orders
+          try {
+            const statusResponse = await CheckoutService.getMidtransStatus(order.id);
+            if (statusResponse && statusResponse.transaction_status) {
+               const { transaction_status } = statusResponse;
+               if (['settlement', 'capture', 'expire', 'cancel', 'deny'].includes(transaction_status)) {
+                  dbUpdated = true;
+               }
+            }
+          } catch (e) {
+            // Ignore if transaction doesn't exist in Midtrans yet
+          }
+        })
+      );
+      
+      if (dbUpdated) {
+        orders = await prisma.order.findMany({
+          where: { customerId: userId },
+          orderBy: { createdAt: 'desc' },
+          include: { items: true }
+        });
+      }
+    }
 
     const productIds = Array.from(new Set(orders.flatMap(o => o.items.map(i => i.productId))));
     const products = await this.fetchProducts(productIds);

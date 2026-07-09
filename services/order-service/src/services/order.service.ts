@@ -56,4 +56,11 @@ export class OrderService {
       include: { items: true, tracking: true }
     });
   }
+
+  static async updateAdminOrderStatus(id: string, status: any) {
+    return prisma.order.update({
+      where: { id },
+      data: { status }
+    });
+  }
 }

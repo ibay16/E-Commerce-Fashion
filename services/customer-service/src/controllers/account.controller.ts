@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { AccountService } from '../services/account.service';
-import { AuthRequest } from '../middleware/auth';
+import { AccountService } from '../services/account.service.js';
+import { AuthRequest } from '@novarium/shared';
 
 export class AccountController {
   static async getProfile(req: AuthRequest, res: Response, next: NextFunction) {
@@ -29,6 +29,9 @@ export class AccountController {
         result = await AccountService.removePaymentMethod(req.user!.id, body.id);
       } else if (action === 'createOrder') {
         result = await AccountService.createOrder(req.user!.id, body);
+      } else if (action === 'toggleWishlistItem' || action === 'removeWishlistItem') {
+        // Basic placeholder since wishlist is currently handled mostly client-side
+        result = { success: true };
       } else {
         throw new Error(`Action ${action} not supported`);
       }

@@ -11,7 +11,7 @@ export const orderApi = {
    */
   async getOrders(fetch: any, limit?: number) {
     try {
-      let url = `${ORDER_API_URL}/orders`;
+      let url = `${ORDER_API_URL}`;
       if (limit) url += `?limit=${limit}`;
       
       const res = await fetch(url);
@@ -28,7 +28,7 @@ export const orderApi = {
    */
   async getOrderById(fetch: any, id: string) {
     try {
-      const res = await fetch(`${ORDER_API_URL}/orders/${id}`);
+      const res = await fetch(`${ORDER_API_URL}/${id}`);
       if (!res.ok) return { data: null };
       return await res.json();
     } catch (e: any) {
@@ -37,3 +37,4 @@ export const orderApi = {
     }
   }
 };
+

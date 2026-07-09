@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 export const env = {
   PORT: process.env.PORT || 4003,
-  DATABASE_URL: process.env.ADMIN_DATABASE_URL || process.env.DATABASE_URL || '',
+  DATABASE_URL: process.env.CORE_DATABASE_URL || process.env.DATABASE_URL || '',
   JWT_SECRET: process.env.JWT_SECRET || 'novarium-super-secret-key-2026',
   INTERNAL_SERVICE_KEY: process.env.INTERNAL_SERVICE_KEY || 'novarium-internal-mesh-key-2026',
   COMMERCE_SERVICE_URL: process.env.COMMERCE_SERVICE_URL || 'http://localhost:3001',

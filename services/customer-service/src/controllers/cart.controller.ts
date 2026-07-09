@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { CartService } from '../services/cart.service';
-import { AuthRequest } from '../middleware/auth';
+import { CartService } from '../services/cart.service.js';
+import { AuthRequest } from '@novarium/shared';
 
 export class CartController {
   static async getCart(req: AuthRequest, res: Response, next: NextFunction) {

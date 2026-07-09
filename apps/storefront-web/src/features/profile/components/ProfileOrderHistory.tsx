@@ -14,8 +14,7 @@ interface ProfileOrderHistoryProps {
 }
 
 function formatPrice(price: number): string {
-  const finalPrice = price < 10000 ? price * 1000 : price;
-  return `Rp ${finalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+  return `Rp ${Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
 }
 
 export default function ProfileOrderHistory({ orders }: ProfileOrderHistoryProps) {

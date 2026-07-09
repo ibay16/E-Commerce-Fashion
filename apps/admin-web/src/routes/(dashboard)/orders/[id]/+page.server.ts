@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 
   try {
     const [orderRes, carriersRes] = await Promise.all([
-      fetch(`${ORDER_API_URL}/orders/${params.id}`),
+      fetch(`${ORDER_API_URL}/${params.id}`),
       fetch(`${ORDER_API_URL}/shipping/carriers`)
     ]);
     
@@ -39,7 +39,7 @@ export const actions: Actions = {
     try {
       const data = await request.formData();
       const status = data.get('status');
-      const res = await fetch(`${ORDER_API_URL}/orders/${params.id}`, {
+      const res = await fetch(`${ORDER_API_URL}/${params.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
