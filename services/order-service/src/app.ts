@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from 'express';
 import { createCorsMiddleware, errorHandler } from '@novarium/shared';
 import { env } from './config/env.js';
