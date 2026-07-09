@@ -26,7 +26,7 @@ export class CartService {
     const productIds = Array.from(new Set(items.map(item => item.productId as string)));
     const products = await this.fetchProducts(productIds);
     
-    return items.map(item => {
+    const hydrated = items.map(item => {
       const product = products.find((p: any) => p.id === item.productId);
       const variant = (product as any)?.variants?.find((v: any) => v.id === item.productVariantId);
       return {
@@ -35,6 +35,19 @@ export class CartService {
         variant
       };
     });
+
+    // Auto-remove orphaned items from database if product no longer exists
+    const orphanedItems = hydrated.filter(item => !item.product);
+    if (orphanedItems.length > 0) {
+      const orphanedIds = orphanedItems.map(item => item.id);
+      await prisma.cartItem.deleteMany({
+        where: { id: { in: orphanedIds } }
+      }).catch(err => console.error("Failed to delete orphaned cart items:", err));
+      
+      return hydrated.filter(item => item.product);
+    }
+
+    return hydrated;
   }
 
   static async getCart(userId: string) {
