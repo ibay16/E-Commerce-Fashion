@@ -19,6 +19,8 @@ app.use('/api/orders/customer', customerRoutes);
 app.use('/api/orders/admin', adminRoutes);
 
 // Error Handler
-app.use(errorHandler as any);
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  errorHandler(err, req, res, next);
+});
 
 export default app;
