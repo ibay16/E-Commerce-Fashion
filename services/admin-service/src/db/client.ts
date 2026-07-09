@@ -1,4 +1,4 @@
-import { PrismaClient } from "@novarium/admin-prisma";
+import { PrismaClient } from "@novarium/database";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 

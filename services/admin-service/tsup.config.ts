@@ -8,5 +8,5 @@ export default defineConfig({
   external: [
     '@prisma/client', '@prisma/adapter-pg', '@prisma/config', '@prisma/client-runtime-utils'
   ],
-  noExternal: ['@novarium/contracts', '@novarium/shared', '@novarium/admin-prisma'],
+  noExternal: ['@novarium/contracts', '@novarium/shared', '@novarium/database'],
 });
